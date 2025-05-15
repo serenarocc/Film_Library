@@ -26,3 +26,16 @@ app.get('/api/films', (req, res) => {
     });
 });
 
+//film dato ID
+app.get('/api/films/:id', (req, res) => {
+    library.getWithId(req.params.id)
+    .then((films) => {
+        res.json(films);//manda a fe films in formato json
+    })
+    .catch((err) => {
+        res.status(500).json({
+            errors: [{'msg' : err.message}],
+        });
+    });
+});
+

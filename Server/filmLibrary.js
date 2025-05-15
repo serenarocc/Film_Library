@@ -1,6 +1,8 @@
 const sqlite = require('sqlite3');
 const Film = require('./film');
 const dayjs = require('dayjs');
+const isIntegerString = (val) => Number.isInteger(Number(val)) && !isNaN(val) && val.trim() !== ''; //verificare caso spazio 5 numero con spazi - stringa spazi e nume ' 5 '
+//se stringa contiene spazio dare false
 
 function FilmLibrary() {
     /** 
@@ -150,6 +152,28 @@ function FilmLibrary() {
         else
           // returning the number of affected rows: if nothing is updated, returns 0
           resolve(this.changes);
+      });
+    });
+  };
+
+  this.getWithId = (id) => {
+    return new Promise((resolve, reject) => {
+      console.log('in promise');
+      if(!isIntegerString(id)){
+        console.log('errore');
+        reject(new Error ('ID is not a number'));
+        return;
+      }
+      console.log('out errore');
+      const query = 'SELECT * FROM films WHERE id = ?';
+      db.all(query, [id], (err, rows) => {
+        if(err) {
+          reject(err);
+        }
+        else {
+          const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
+          resolve(films);
+        }
       });
     });
   };
