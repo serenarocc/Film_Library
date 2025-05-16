@@ -1,7 +1,18 @@
-## Retrieve all the films.
-# GET http://localhost:3000/api/films HTTP/1.1
+## Req 1: Retrieve all the films.
+##  GET http://localhost:3000/api/films HTTP/1.1
 
-GET http://localhost:3000/api/films/x HTTP/1.1
+## Req 2: retrive a film given the ID
+## GET http://localhost:3000/api/films/2 HTTP/1.1
+
+
+## Req 4: Update film favorite property.
+PUT http://localhost:3000/api/films/3 HTTP/1.1
+content-type: application/json
+
+{
+    "id" : 3,
+    "favorite": 1
+}
 ###
 ## Create new film (without id)
 # ## POST http://localhost:3000/api/films HTTP/1.1

@@ -156,6 +156,7 @@ function FilmLibrary() {
     });
   };
 
+  //torna film dato id
   this.getWithId = (id) => {
     return new Promise((resolve, reject) => {
       console.log('in promise');
@@ -176,6 +177,26 @@ function FilmLibrary() {
         }
       });
     });
+  };
+
+  
+  //This function updates an existing film given its id and the new properties.
+  this.updateFilm = (id, film) => {
+      return new Promise((resolve, reject) => {
+        const sql = 'UPDATE films SET title = ?, favorite = ?, watchDate = ?, rating = ? WHERE id = ?';
+        db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, id], function (err) {
+        console.log('Updating film with values:', film, 'and id:', id);
+        if (err) {
+          reject(err);
+        }
+        if (this.changes !== 1) {
+          resolve({ error: 'Film not found.' });
+        } else {
+          console.log('Updating film with values:', film, 'and id:', id);
+          resolve(this.getWithId(id)); 
+        }
+        });
+      });
   };
 
 }
