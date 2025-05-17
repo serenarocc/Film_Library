@@ -2,25 +2,27 @@
 ##  GET http://localhost:3000/api/films HTTP/1.1
 
 ## API Req 2: retrive a film given the ID
-# GET http://localhost:3000/api/films/3 HTTP/1.1
+#  GET http://localhost:3000/api/films/3 HTTP/1.1
 
-## API Req 3: Create new film (without id)
-# ## POST http://localhost:3000/api/films HTTP/1.1
-# content-type: application/json
-# {
-# "title": "Guardians of the Galaxy Vol.3",
-# "favorite": 1,
-# "watchDate": "2024-02-09",
-# "rating": 4
-#  }
-# ###
-
-## API Req 4: Update film favorite property.
-PUT http://localhost:3000/api/films/3 HTTP/1.1
-content-type: application/json
+### API Req 3: Create new film (without id)
+POST http://localhost:3000/api/films HTTP/1.1
+Content-Type: application/json
 
 {
-    "id" : 3,
-    "favorite": 1
+  "title": "nuovo film Black Mirror 8",
+  "favorite": 1,
+  "watchDate": "2024-02-09",
+  "rating": 4
 }
 ###
+
+# ## API Req 4: Update film favorite property.
+# PUT http://localhost:3000/api/films/3 HTTP/1.1
+# content-type: application/json
+
+# {
+#     "id" : 3,
+#     "favorite": 0
+# }
+###
+

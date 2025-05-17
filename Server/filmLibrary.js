@@ -5,8 +5,8 @@ const isIntegerString = (val) => {
   return (
       Number.isInteger(Number(val)) &&   //Number(val) converte val (che può essere una stringa in un numero). isInteger verifica se l'argomento è un numero intero (senza decimali) 
       !isNaN(val) &&  //"Il valore val può essere interpretato come un numero" (cioè è numerico o convertibile in numero).
-      val.trim() !== '' && //trim Rimuove tutti gli spazi bianchi all'inizio e alla fine della stringa.
-      !val.includes(' ') //non ci devono essere spazi come ' 5 '
+      String(val).trim() !== '' && //trim Rimuove tutti gli spazi bianchi all'inizio e alla fine della stringa.
+      !String(val).includes(' ') //non ci devono essere spazi come ' 5 '
     );
 };
 
@@ -182,24 +182,45 @@ function FilmLibrary() {
       });
     });
   };
-  
-  //This function updates an existing film given its id and the new properties.
-  this.updateFilm = (id, film) => {
-      return new Promise((resolve, reject) => {
-        const sql = 'UPDATE films SET title = ?, favorite = ?, watchDate = ?, rating = ? WHERE id = ?';
-        db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, id], function (err) {
-        console.log('Updating film with values:', film, 'and id:', id);
+
+  //API Req3: 
+  this.createFilm = (film) => {
+    return new Promise((resolve, reject) => {
+      const sql = 'INSERT INTO films (title, favorite, watchDate, rating) VALUES(?, ?, ?, ?)';
+      
+      const self = this;  // salva il contesto
+
+      db.run(sql, [film.title, film.favorite, film.watchDate, film.rating], function (err) {
         if (err) {
           reject(err);
         }
-        if (this.changes !== 1) {
+        // Returning the newly created object with the DB additional properties (i.e., unique id) to the client.
+        resolve(self.getWithId(this.lastID));
+      });
+    });
+  };
+
+  
+  //API Req4: This function updates an existing film given its id and the new properties.
+  this.updateFilm = (id, film) => {
+    return new Promise((resolve, reject) => {
+      const sql = 'UPDATE films SET title = ?, favorite = ?, watchDate = ?, rating = ? WHERE id = ?';
+  
+      const self = this;  // salva il contesto
+  
+      db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, id], function (err) {
+        console.log('Updating film with values:', film, 'and id:', id);
+        if (err) {
+          reject(err);
+        } else if (this.changes !== 1) {
           resolve({ error: 'Film not found.' });
         } else {
-          console.log('Updating film with values:', film, 'and id:', id);
-          resolve(this.getWithId(id)); 
+          self.getWithId(id)
+            .then(f => resolve(f))
+            .catch(e => reject(e));
         }
-        });
       });
+    });
   };
 
 }
