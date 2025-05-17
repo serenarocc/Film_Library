@@ -185,7 +185,7 @@ function FilmLibrary() {
     });
   };
 
-  //API Req3: 
+  //API Req3:  crea film senza dare id
   this.createFilm = (film) => {
     return new Promise((resolve, reject) => {
       const sql = 'INSERT INTO films (title, favorite, watchDate, rating) VALUES(?, ?, ?, ?)';
