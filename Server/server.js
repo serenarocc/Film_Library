@@ -72,7 +72,7 @@ app.get('/api/films/:id', (req, res) => {
     });
 });
 
-//API Req 3: create a film 
+//API Req 3: create a film - check interno così mi semplifica la vita - require installare express validator
 app.post('/api/films',
   // [
   //   check('favorite').isBoolean(),
@@ -82,10 +82,10 @@ app.post('/api/films',
   // ], 
   async (req, res) => {
     // Is there any validation error?
-    const errors = validationResult(req).formatWith(errorFormatter); // format error message
-    if (!errors.isEmpty()) {
-      return res.status(422).json( errors.errors ); // error message is sent back as a json with the error info
-    }
+    // const errors = validationResult(req).formatWith(errorFormatter); // format error message
+    // if (!errors.isEmpty()) {
+    //   return res.status(422).json( errors.errors ); // error message is sent back as a json with the error info
+    // }
 
     const film = {
       title: req.body.title,
@@ -106,22 +106,24 @@ app.post('/api/films',
 //Req 4
 //API mark an existing film as favourite or unfavourite
 app.put('/api/films/:id', async (req, res) => {
-    const filmId = Number(req.params.id);
+    const filmId = Number(req.params.id); //params lo prendi dal path del http
   
-    if (req.body.id && req.body.id !== filmId) {
-      return res.status(422).json({ error: 'URL and body id mismatch' });
+    if (req.body.id && req.body.id !== filmId) { //body del http
+      return res.status(422).json({ error: 'URL and body id mismatch' }); //status(422) json ha di deafult parametro status. status indica il tipo di errore
     }
   
     try {
-      const filmArray = await library.getWithId(filmId);
-      const film = filmArray[0];
+      // const filmArray = await library.getWithId(filmId); //db.all li da tutti mi prendo il primo dell'array
+      // const film = filmArray[0];
+
+      const film = await library.getWithId(filmId); 
   
       if (!film) {
         return res.status(404).json({ error: `Film with id ${filmId} not found.` });
       }
   
       const newFilm = {
-        title: req.body.title ?? film.title,
+        title: req.body.title ?? film.title, //metto titolo dle body se non c'è metto quello del db
         favorite: req.body.favorite ?? film.favorite,
         watchDate: req.body.watchDate ?? film.watchDate,
         rating: req.body.rating ?? film.rating,
@@ -131,9 +133,51 @@ app.put('/api/films/:id', async (req, res) => {
       if (result.error)
         res.status(404).json(result);
       else
-        res.json(result);
+        res.json(result); //quando la risposta è gisuta di default è status 200 (ok) ci andrebbe sempre ma quando è giusto è implicito
     } catch (err) {
       console.error('Errore durante update:', err);
       res.status(503).json({ error: `Database error during the update of film ${req.params.id}` });
     }
   });
+
+  //Req 6
+  app.delete('/api/films/:id', async (req, res) => {
+    const filmId = Number(req.params.id); //params lo prendi dal path del http
+    console.log('prima di try');
+    try {
+
+      await library.deleteWithId(filmId); 
+      console.log('dopo delete');
+      res.status(204).end(); //no content processato con successo ma non ritorna niente perche hai fatto delete 
+
+    } catch (err) {
+      console.error('Errore durante delete:', err);
+      res.status(503).json({ error: `Database error during the delete of film ${req.params.id}` });
+    }
+  });
+
+  //api 7
+  app.get('/api/films/filter/:paramfilter', (req, res) => {
+    let films;
+    
+    if(req.params.paramfilter == 'all'){
+      films = library.getAll();
+    }else if(req.params.paramfilter == 'best'){
+      films = library.getAllBest();
+    }else if(req.params.paramfilter == 'favorite'){
+      films = library.getAllFavorite();
+    }else if(req.params.paramfilter == 'lastmonth'){
+      //films = library.getAllLastMonth();
+    }else if(req.params.paramfilter == 'unseen'){
+      films = library.getAllUnseen();
+    }
+    
+    films.then((films) => {
+        res.json(films);//manda a fe films in formato json
+    })
+    .catch((err) => {
+        res.status(500).json({
+            errors: [{'msg' : err}],
+        });
+    });
+});

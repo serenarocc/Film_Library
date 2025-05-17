@@ -165,18 +165,20 @@ function FilmLibrary() {
 
   //API Req 2: torna film dato id
   this.getWithId = (id) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => { //promise oggetto che rappresenta un dato che ottieni in modo asincrono. Ritorna subito una promise(non un valore) , quando la funz asincroa termina la promise viene valorizzata e ti da il valore
       if(!isIntegerString(id)){
         reject(new Error ('ID is not a number'));
         return;
       }
       const query = 'SELECT * FROM films WHERE id = ?';
-      db.all(query, [id], (err, rows) => {
+      //db.all(query, [id], (err, rows) => { //ritorna tutti
+      db.get(query, [id], (err, row) => { //ritorna 1
         if(err) {
           reject(err);
         }
         else {
-          const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
+          //const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating)); //map va solo sulle collezioni e non sul singolo oggetto
+          const films = new Film(row.id, row.title, row.favorite == 1, row.watchdate, row.rating)
           resolve(films);
         }
       });
@@ -195,18 +197,20 @@ function FilmLibrary() {
           reject(err);
         }
         // Returning the newly created object with the DB additional properties (i.e., unique id) to the client.
-        resolve(self.getWithId(this.lastID));
+        //lastId lo ho solo se faccio db.run
+        //qui dentro this è db.run
+        resolve(self.getWithId(this.lastID));// siamo in db.run, per lui this è sqlite3. lastid è una variabile / proprietà di sqlite3. è una funzione del db. proprietà interna
       });
     });
   };
 
-  
   //API Req4: This function updates an existing film given its id and the new properties.
+  //modificare usando exports
   this.updateFilm = (id, film) => {
     return new Promise((resolve, reject) => {
       const sql = 'UPDATE films SET title = ?, favorite = ?, watchDate = ?, rating = ? WHERE id = ?';
   
-      const self = this;  // salva il contesto
+      const self = this;  // salva il contesto quindi this per me è FilmLibrary
   
       db.run(sql, [film.title, film.favorite, film.watchDate, film.rating, id], function (err) {
         console.log('Updating film with values:', film, 'and id:', id);
@@ -216,8 +220,90 @@ function FilmLibrary() {
           resolve({ error: 'Film not found.' });
         } else {
           self.getWithId(id)
-            .then(f => resolve(f))
-            .catch(e => reject(e));
+            .then(f => resolve(f)) //
+            .catch(e => reject(e)); //cattura errore la promise e lo stampa lato server
+        }
+      });
+    });
+  };
+
+  //api 6
+  this.deleteWithId = (id) => {
+    return new Promise((resolve, reject) => { //promise oggetto che rappresenta un dato che ottieni in modo asincrono. Ritorna subito una promise(non un valore) , quando la funz asincroa termina la promise viene valorizzata e ti da il valore
+      if(!isIntegerString(id)){
+        reject(new Error ('ID is not a number'));
+        return;
+      }
+      const query = 'DELETE FROM films WHERE id = ?';
+      db.run(query, [id], (err, row) => { 
+        if(err) {
+          reject(err);
+        }
+        else {
+          console.log(' delete db.run');
+          resolve(null);
+        }
+      });
+    });
+  };
+
+//api 7
+  this.getAllFavorite = () => {
+    return new Promise((resolve, reject) => {
+      const query = 'SELECT * FROM films WHERE favorite = 1' ;
+      db.all(query, [], (err, rows) => {
+        if(err) {
+          reject(err);
+        }
+        else {
+          const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
+          resolve(films);
+        }
+      });
+    });
+  };
+
+  // this.getAllLastMonth = () => { //conversione campo text in data
+  //   return new Promise((resolve, reject) => { //watchdate
+  //     const query = 'SELECT * FROM films WHERE watchdate ' ;
+  //     db.all(query, [], (err, rows) => {
+  //       if(err) {
+  //         reject(err);
+  //       }
+  //       else {
+  //         const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
+  //         resolve(films);
+  //       }
+  //     });
+  //   });
+  // };
+
+  
+  this.getAllUnseen = () => { 
+    return new Promise((resolve, reject) => { //watchdate
+      const query = 'SELECT * FROM films WHERE watchdate IS NULL ' ;
+      db.all(query, [], (err, rows) => {
+        if(err) {
+          reject(err);
+        }
+        else {
+          const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
+          resolve(films);
+        }
+      });
+    });
+  };
+
+  this.getAllBest = () => { 
+    return new Promise((resolve, reject) => { //watchdate
+      const query = 'SELECT * FROM films WHERE rating =5' ;
+      db.all(query, [], (err, rows) => {
+        if(err) {
+          reject(err);
+        }
+        else {
+          const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
+          resolve(films);
         }
       });
     });
