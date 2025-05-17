@@ -18,8 +18,8 @@ app.listen(PORT,()=>{
     console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-//GET // dao rappresentazione tramite oggetto del db. oggetto che fa da tramite per accedere ai dati del db
-//API retrive all film
+//API Req 1: retrive all film
+// dao rappresentazione tramite oggetto del db. oggetto che fa da tramite per accedere ai dati del db
 //routing
 app.get('/api/films', (req, res) => {
     library.getAll()
@@ -33,7 +33,7 @@ app.get('/api/films', (req, res) => {
     });
 });
 
-//Req 2: API retrive a film given the ID
+//API Req 2: retrive a film given the ID
 app.get('/api/films/:id', (req, res) => {
     library.getWithId(req.params.id)
     .then((films) => {
@@ -46,7 +46,7 @@ app.get('/api/films/:id', (req, res) => {
     });
 });
 
-//API create a film 
+//API Req 3: create a film 
 // app.get('/api/films', (req, res) => {
 //     library.addFilm(film)
 //     .then((films) => {

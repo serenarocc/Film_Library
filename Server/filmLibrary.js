@@ -1,9 +1,16 @@
 const sqlite = require('sqlite3');
 const Film = require('./film');
 const dayjs = require('dayjs');
-const isIntegerString = (val) => Number.isInteger(Number(val)) && !isNaN(val) && val.trim() !== ''; //verificare caso spazio 5 numero con spazi - stringa spazi e nume ' 5 '
-//se stringa contiene spazio dare false
-//commento
+const isIntegerString = (val) => {
+  return (
+      Number.isInteger(Number(val)) &&   //Number(val) converte val (che può essere una stringa in un numero). isInteger verifica se l'argomento è un numero intero (senza decimali) 
+      !isNaN(val) &&  //"Il valore val può essere interpretato come un numero" (cioè è numerico o convertibile in numero).
+      val.trim() !== '' && //trim Rimuove tutti gli spazi bianchi all'inizio e alla fine della stringa.
+      !val.includes(' ') //non ci devono essere spazi come ' 5 '
+    );
+};
+
+
 function FilmLibrary() {
     /** 
      * 
@@ -156,16 +163,13 @@ function FilmLibrary() {
     });
   };
 
-  //torna film dato id
+  //API Req 2: torna film dato id
   this.getWithId = (id) => {
     return new Promise((resolve, reject) => {
-      console.log('in promise');
       if(!isIntegerString(id)){
-        console.log('errore');
         reject(new Error ('ID is not a number'));
         return;
       }
-      console.log('out errore');
       const query = 'SELECT * FROM films WHERE id = ?';
       db.all(query, [id], (err, rows) => {
         if(err) {
@@ -178,7 +182,6 @@ function FilmLibrary() {
       });
     });
   };
-
   
   //This function updates an existing film given its id and the new properties.
   this.updateFilm = (id, film) => {
