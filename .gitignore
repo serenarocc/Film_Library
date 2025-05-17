@@ -1,0 +1,59 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output
+dist/
+build/
+out/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VSCode settings
+.vscode/
+
+# dotenv files (if using environment variables)
+.env
+.env.*.local
+
+# Test coverage reports
+coverage/
+*.lcov
+
+# Logs
+logs/
+*.log
+
+# Parcel cache
+.cache/
+
+# Next.js (if used)
+.next/
+
+# React Native
+.expo/
+.expo-shared/
+
+# Storybook files (if used)
+storybook-static/
+
+# Others
+*.tgz
+*.gz
+
+# Optional: Mac .Trash
+.Trash/
+
+# Optional: IDEs
+.idea/
+*.iml
+
+# Optional: lock files (depending on your package manager policy)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
