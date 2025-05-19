@@ -142,25 +142,30 @@ app.put('/api/films/:id', async (req, res) => {
 
   //API Req 5: change rating of delta
 app.put('/api/films/rating/:delta', async (req, res) => {
-  const delta = Number(req.params.delta); //params lo prendi dal path del http
+  const delta = Number(req.body.delta); //params lo prendi dal path del http
   const filmId = req.body.id;
-  console.log('req.body.id: ');
-  // if (!req.body.id) { //body del http
-  //   return res.status(422).json({ error: 'URL and body id mismatch' }); //status(422) json ha di deafult parametro status. status indica il tipo di errore
-  // }
-
   try {
     const film = await library.getWithId(filmId); 
-
     if (!film) {
       return res.status(404).json({ error: `Film with id ${filmId} not found.` });
     }
-    let newRating = film.rating + delta;
+    
+    if(film.rating == null){
+      return res.status(404).json({ error: `Upadate denied. The film have a null rating' ${film} ` });
+    }
+  
+    let newRating;
+    if(req.body.operazione == '+'){
+      newRating = film.rating + delta;
+    }else if(req.body.operazione == '-'){
+      newRating = film.rating - delta;
+    }
+
     const newFilm = {
       title: req.body.title ?? film.title, //metto titolo dle body se non c'è metto quello del db
       favorite: req.body.favorite ?? film.favorite,
       watchDate: req.body.watchDate ?? film.watchDate,
-      rating:  newRating, //??????????????????
+      rating:  newRating, 
     };
 
     const result = await library.updateFilm(filmId, newFilm);
