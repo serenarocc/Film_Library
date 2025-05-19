@@ -4,7 +4,8 @@ const express = require('express');
 const film = require('./film');
 const filmLibrary = require('./filmLibrary');
 const library = new filmLibrary();
-// const { validationResult } = require('express-validator');
+const { check, validationResult, body, } = require('express-validator'); // validation middleware
+
 // const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
 //     return `${location}[${param}]: ${msg}`;
 //   };
@@ -14,6 +15,13 @@ const library = new filmLibrary();
 const app = express(); //oggetto server
 app.use(express.json()); // abilita parsing JSON
 const PORT = 3000;
+
+/*** Utility Functions ***/
+// This function is used to format express-validator errors as strings
+const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
+  return `${location}[${param}]: ${msg}`;
+};
+
 
 // Middleware per loggare tutte le richieste
 app.use((req, res, next) => {
@@ -41,8 +49,16 @@ app.get('/api/films', (req, res) => {
     });
 });
 
+
 //API Req 2: retrive a film given the ID
-app.get('/api/films/:id', (req, res) => {
+app.get('/api/films/:id', 
+  [ check('id').isInt({min: 1}) ],    // check: is the id an integer, and is it a positive integer?
+  async (req, res) => {
+    // Is there any validation error?
+    const errors = validationResult(req).formatWith(errorFormatter); // format error message
+    if (!errors.isEmpty()) {
+      return res.status(422).json( errors.errors ); // error message is sent back as a json with the error info
+    }
     library.getWithId(req.params.id)
     .then((films) => {
         res.json(films);//manda a fe films in formato json
@@ -56,18 +72,18 @@ app.get('/api/films/:id', (req, res) => {
 
 //API Req 3: create a film - check interno così mi semplifica la vita - require installare express validator
 app.post('/api/films',
-  // [
-  //   check('favorite').isBoolean(),
-  //   // only date (first ten chars) and valid ISO e.g. 2024-02-09
-  //   check('watchDate').isLength({min: 10, max: 10}).isISO8601({strict: true}).optional({checkFalsy: true}),
-  //   check('rating').isInt({min: 1, max: 5}),
-  // ], 
+  [
+    check('favorite').isBoolean(),
+    // only date (first ten chars) and valid ISO e.g. 2024-02-09
+    check('watchDate').isLength({min: 10, max: 10}).isISO8601({strict: true}).optional({checkFalsy: true}),
+    check('rating').isInt({min: 1, max: 5}),
+  ], 
   async (req, res) => {
     // Is there any validation error?
-    // const errors = validationResult(req).formatWith(errorFormatter); // format error message
-    // if (!errors.isEmpty()) {
-    //   return res.status(422).json( errors.errors ); // error message is sent back as a json with the error info
-    // }
+    const errors = validationResult(req).formatWith(errorFormatter); // format error message
+    if (!errors.isEmpty()) {
+      return res.status(422).json( errors.errors ); // error message is sent back as a json with the error info
+    }
 
     const film = {
       title: req.body.title,
@@ -86,8 +102,15 @@ app.post('/api/films',
 );
 
 //API Req 4: mark an existing film as favourite or unfavourite
-  app.put('/api/films/:id', async (req, res) => {
-    console.log('entra api 4');
+  app.put('/api/films/:id', [
+    check('id').isInt({min: 1}),    // check: is the id an integer, and is it a positive integer?
+  ],
+  async (req, res) => {
+    // Is there any validation error?
+    const errors = validationResult(req).formatWith(errorFormatter); // format error message
+    if (!errors.isEmpty()) {
+      return res.status(422).json( errors.errors ); // error message is sent back as a json with the error info
+    }
       const filmId = Number(req.params.id); //params lo prendi dal path del http
     
       if (req.body.id && req.body.id !== filmId) { //body del http

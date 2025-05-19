@@ -12,6 +12,7 @@
   "dependencies": {
     "dayjs": "^1.11.13",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
     "sqlite": "^5.1.1"
   }
 }
