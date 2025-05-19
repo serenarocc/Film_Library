@@ -4,11 +4,8 @@ const express = require('express');
 const film = require('./film');
 const filmLibrary = require('./filmLibrary');
 const library = new filmLibrary();
-const { check, validationResult, body, } = require('express-validator'); // validation middleware
+const { check, validationResult, body, } = require('express-validator'); // validation middleware -- importazione del modulo
 
-// const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
-//     return `${location}[${param}]: ${msg}`;
-//   };
 
 //avviazione server 
 // //create application
@@ -17,6 +14,10 @@ app.use(express.json()); // abilita parsing JSON
 const PORT = 3000;
 
 /*** Utility Functions ***/
+
+// It is recommended (to have a limit to avoid malicious requests waste space in DB and network bandwidth.
+const maxTitleLength = 160;
+
 // This function is used to format express-validator errors as strings
 const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
   return `${location}[${param}]: ${msg}`;
@@ -59,20 +60,32 @@ app.get('/api/films/:id',
     if (!errors.isEmpty()) {
       return res.status(422).json( errors.errors ); // error message is sent back as a json with the error info
     }
-    library.getWithId(req.params.id)
-    .then((films) => {
-        res.json(films);//manda a fe films in formato json
-    })
-    .catch((err) => {
-        res.status(500).json({
-            errors: [{'msg' : err.message}],
-        });
-    });
+    try {
+      const result = await library.getWithId(req.params.id);
+      if (result.error)   // If not found, the function returns a resolved promise with an object where the "error" field is set
+        res.status(404).json(result);
+      else
+        res.json(result);
+    } catch (err) {
+      console.log(err);  // Logging errors is expecially useful while developing, to catch SQL errors etc.
+      res.status(500).end();
+    }
+    // library.getWithId(req.params.id)
+    // .then((films) => {
+    //     res.json(films);//manda a fe films in formato json
+    // })
+    // .catch((err) => {
+    //     res.status(500).json({
+    //         errors: [{'msg' : err.message}],
+    //     });
+    // });
 });
+
 
 //API Req 3: create a film - check interno così mi semplifica la vita - require installare express validator
 app.post('/api/films',
   [
+    check('title').isLength({min: 1, max: maxTitleLength}),  // double check if a max length applies to your case
     check('favorite').isBoolean(),
     // only date (first ten chars) and valid ISO e.g. 2024-02-09
     check('watchDate').isLength({min: 10, max: 10}).isISO8601({strict: true}).optional({checkFalsy: true}),
@@ -104,6 +117,11 @@ app.post('/api/films',
 //API Req 4: mark an existing film as favourite or unfavourite
   app.put('/api/films/:id', [
     check('id').isInt({min: 1}),    // check: is the id an integer, and is it a positive integer?
+    check('title').isLength({min: 1, max: maxTitleLength}).optional(),
+    check('favorite').isBoolean().optional(),
+    // only date (first ten chars) and valid ISO 
+    check('watchDate').isLength({min: 10, max: 10}).isISO8601({strict: true}).optional({checkFalsy: true}),
+    check('rating').isInt({min: 1, max: 5}).optional(),
   ],
   async (req, res) => {
     // Is there any validation error?
@@ -146,46 +164,58 @@ app.post('/api/films',
     });
 
 //API Req 5: change rating of delta
-app.put('/api/films/rating/:delta', async (req, res) => {
-  const delta = Number(req.body.delta); //params lo prendi dal path del http
-  const filmId = req.body.id;
-  try {
-    const film = await library.getWithId(filmId); 
-    if (!film) {
-      return res.status(404).json({ error: `Film with id ${filmId} not found.` });
-    }
+app.put('/api/films/rating/:delta',
+  [ // These checks will apply to the req.body part
+    check('id').isInt({min: 1}),
+    check('deltaRating').isInt({ min: -4, max: 4 }),
+  ],
+  async (req, res) => {
+     // Is there any validation error?
+     const errors = validationResult(req).formatWith(errorFormatter); // format error message
+     if (!errors.isEmpty()) {
+       return res.status(422).json( errors.errors ); // error message is sent back as a json with the error info
+     }
+    const delta = Number(req.body.delta); //params lo prendi dal path del http
+    const filmId = req.body.id;
+    try {
+      const film = await library.getWithId(filmId); 
+      if (!film) {
+        return res.status(404).json({ error: `Film with id ${filmId} not found.` });
+      }
+      
+      if(film.rating == null){
+        return res.status(404).json({ error: `Upadate denied. The film have a null rating' ${film} ` });
+      }
     
-    if(film.rating == null){
-      return res.status(404).json({ error: `Upadate denied. The film have a null rating' ${film} ` });
-    }
-  
-    let newRating;
-    if(req.body.operazione == '+'){
-      newRating = film.rating + delta;
-    }else if(req.body.operazione == '-'){
-      newRating = film.rating - delta;
-    }
+      let newRating;
+      if(req.body.operazione == '+'){
+        newRating = film.rating + delta;
+      }else if(req.body.operazione == '-'){
+        newRating = film.rating - delta;
+      }
 
-    const newFilm = {
-      title: req.body.title ?? film.title, //metto titolo dle body se non c'è metto quello del db
-      favorite: req.body.favorite ?? film.favorite,
-      watchDate: req.body.watchDate ?? film.watchDate,
-      rating:  newRating, 
-    };
+      const newFilm = {
+        title: req.body.title ?? film.title, //metto titolo dle body se non c'è metto quello del db
+        favorite: req.body.favorite ?? film.favorite,
+        watchDate: req.body.watchDate ?? film.watchDate,
+        rating:  newRating, 
+      };
 
-    const result = await library.updateFilm(filmId, newFilm);
-    if (result.error)
-      res.status(404).json(result);
-    else
-      res.json(result); //quando la risposta è gisuta di default è status 200 (ok) ci andrebbe sempre ma quando è giusto è implicito
-  } catch (err) {
-    console.error('Errore durante update:', err);
-    res.status(503).json({ error: `Database error during the update of film ${req.params.id}` });
-  }
+      const result = await library.updateFilm(filmId, newFilm);
+      if (result.error)
+        res.status(404).json(result);
+      else
+        res.json(result); //quando la risposta è gisuta di default è status 200 (ok) ci andrebbe sempre ma quando è giusto è implicito
+    } catch (err) {
+      console.error('Errore durante update:', err);
+      res.status(503).json({ error: `Database error during the update of film ${req.params.id}` });
+    }
 });
 
 //API Req 6: delete an existing film given the id
-app.delete('/api/films/:id', async (req, res) => {
+app.delete('/api/films/:id', 
+  [ check('id').isInt({min: 1}) ],
+  async (req, res) => {
   const filmId = Number(req.params.id); //params lo prendi dal path del http
   console.log('prima di try');
   try {

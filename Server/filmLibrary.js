@@ -10,6 +10,32 @@ const isIntegerString = (val) => {
     );
 };
 
+const convertFilmFromDbRecord = (dbRecord) => {
+  const film = {};
+  film.id = dbRecord.id;
+  film.title = dbRecord.title;
+  film.favorite = dbRecord.favorite;
+  // Note that the column name is all lowercase, JSON object requires camelCase as per the API specifications we defined.
+  // We convert "watchdate" to the camelCase version ("watchDate").
+
+
+  // FIXME
+  // Also, here you decide how to transmit an empty date in JSON. We decided to use the empty string.
+  // Using the null value is an alternative, but the API documentation must be updated and the client must be modified accordingly.
+  //film.watchDate = dbRecord.watchdate ? dayjs(dbRecord.watchdate) : "";
+  film.watchDate = dbRecord.watchdate;
+  film.rating = dbRecord.rating;
+
+  /* // ALTERNATIVE:
+  // WARNING: the column names in the database are all lowercases. JSON object requires camelCase as per the API specifications we defined.
+  // We convert "watchdate" to the camelCase version ("watchDate").
+  // Object.assign will copy all fields returned by the DB (i.e., all columns if SQL SELECT did not specify otherwise)
+  const film = Object.assign({}, e, { watchDate: e.watchdate? dayjs(e.watchdate) : "" });  // adding camelcase "watchDate"
+  delete film.watchdate;  // removing lowercase "watchdate"
+  */
+  return film;
+}
+
 
 function FilmLibrary() {
     /** 
@@ -177,9 +203,14 @@ function FilmLibrary() {
           reject(err);
         }
         else {
-          //const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating)); //map va solo sulle collezioni e non sul singolo oggetto
-          const films = new Film(row.id, row.title, row.favorite == 1, row.watchdate, row.rating)
-          resolve(films);
+          if (row == undefined) { //check if the id that i'm serching for currently exist in db
+            resolve({ error: 'Film not found.' });
+          } else {
+            //const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating)); //map va solo sulle collezioni e non sul singolo oggetto
+            //const films = new Film(row.id, row.title, row.favorite == 1, row.watchdate, row.rating);
+            const film = convertFilmFromDbRecord(row);
+            resolve(film); 
+          }
         }
       });
     });
@@ -240,8 +271,12 @@ function FilmLibrary() {
           reject(err);
         }
         else {
-          console.log(' delete db.run');
-          resolve(null);
+          if (row == undefined) { //check if the id that i'm serching for currently exist in db
+            resolve({ error: 'Film not found.' });
+          } else {
+            console.log(' delete db.run');
+            resolve(null);
+          }
         }
       });
     });
@@ -264,34 +299,6 @@ function FilmLibrary() {
   };
 
   //api 7 film seen in the last 30 days
-  // this.getAllLastMonth = () => { //conversione campo text in data
-  //   return new Promise((resolve, reject) => { //watchdate
-  //     const self = this;  
-  //     const films = self.getAll();
-  //     console.log("prova api 7");
-  //     console.log("films", films);
-  //     let newFilmsArray = [];
-  //     let j=0;
-      
-  //     for(let i=0;  i<films.length; i++ ){
-  //         let inputDate = films[i].watchDate;
-  //         console.log("inputDate", inputDate);
-  //         // Calcola la differenza in millisecondi
-  //         const diffInMs = today - inputDate;
-  //         console.log("diffInMs",diffInMs);
-  //         // Convertila in giorni
-  //         const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-  //         console.log("diffInDays",diffInDays);
-  //         // Restituisce true se la data è più vecchia di 30 giorni
-  //         if(diffInDays <= 30){
-  //           newFilmsArray[j]=films[i];
-  //           j++;
-  //         }
-  //     }
-  //     resolve(newFilmsArray);
-  //   });
-  // };
-
   this.getAllLastMonth = () => {
     return new Promise((resolve, reject) => {
       const today = dayjs();
