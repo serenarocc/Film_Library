@@ -87,6 +87,7 @@ app.post('/api/films',
 
 //API Req 4: mark an existing film as favourite or unfavourite
   app.put('/api/films/:id', async (req, res) => {
+    console.log('entra api 4');
       const filmId = Number(req.params.id); //params lo prendi dal path del http
     
       if (req.body.id && req.body.id !== filmId) { //body del http
@@ -104,7 +105,7 @@ app.post('/api/films',
         }
     
         const newFilm = {
-          title: req.body.title ?? film.title, //metto titolo dle body se non c'è metto quello del db
+          title: req.body.title ?? film.title, //metto titolo del body se non c'è metto quello del db
           favorite: req.body.favorite ?? film.favorite,
           watchDate: req.body.watchDate ?? film.watchDate,
           rating: req.body.rating ?? film.rating,
