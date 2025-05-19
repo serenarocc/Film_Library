@@ -1,19 +1,19 @@
 ## API Req 1: Retrieve all the films.
-   GET http://localhost:3000/api/films HTTP/1.1
+#    GET http://localhost:3000/api/films HTTP/1.1
 
 ## API Req 2: retrive a film given the ID
 # GET http://localhost:3000/api/films/2 HTTP/1.1
 
 ## API Req 3: Create new film (without id) -- dee terminare con 3 cancelletti altimenti si rompe
-# POST http://localhost:3000/api/films HTTP/1.1
-# Content-Type: application/json
+POST http://localhost:3000/api/films HTTP/1.1
+Content-Type: application/json
 
-# {
-#   "title": "scooby doo 8",
-#   "favorite": 1,
-#   "watchDate": "2025-02-03",
-#   "rating": 4
-# }
+{
+  "title": "scooby doo 8",
+  "favorite": 1,
+  "watchDate": "2025-05-10",
+  "rating": 4
+}
 ###
 
 ### API Req 4: Update film favorite property.
@@ -27,24 +27,24 @@
 ###
 
 ### API Req 5: Change the reating
-PUT http://localhost:3000/api/films/rating/delta HTTP/1.1
-content-type: application/json
+# PUT http://localhost:3000/api/films/rating/delta HTTP/1.1
+# content-type: application/json
 
-{
-    "id" : 1,
-    "operazione": "+",
-    "delta": 5
-}
+# {
+#     "id" : 1,
+#     "operazione": "+",
+#     "delta": 5
+# }
 ###
 
 
 ### API Req 6: Deleate a film given the id
-#  DELETE  http://localhost:3000/api/films/3 HTTP/1.1
+#  DELETE  http://localhost:3000/api/films/4 HTTP/1.1
 #  Content-Type: application/json
 
-# ## API Req 7: 
+# ## API Req 7: retive films in based a different filter
 # # get non possono avere il body
-# GET http://localhost:3000/api/films/filter/unseen HTTP/1.1
-# content-type: application/json
+GET http://localhost:3000/api/films/filter/lastmonth HTTP/1.1
+content-type: application/json
 
 ###

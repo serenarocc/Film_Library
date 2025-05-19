@@ -247,7 +247,7 @@ function FilmLibrary() {
     });
   };
 
-//api 7
+  //api 7
   this.getAllFavorite = () => {
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM films WHERE favorite = 1' ;
@@ -263,22 +263,58 @@ function FilmLibrary() {
     });
   };
 
+  //api 7 film seen in the last 30 days
   // this.getAllLastMonth = () => { //conversione campo text in data
   //   return new Promise((resolve, reject) => { //watchdate
-  //     const query = 'SELECT * FROM films WHERE watchdate ' ;
-  //     db.all(query, [], (err, rows) => {
-  //       if(err) {
-  //         reject(err);
-  //       }
-  //       else {
-  //         const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
-  //         resolve(films);
-  //       }
-  //     });
+  //     const self = this;  
+  //     const films = self.getAll();
+  //     console.log("prova api 7");
+  //     console.log("films", films);
+  //     let newFilmsArray = [];
+  //     let j=0;
+      
+  //     for(let i=0;  i<films.length; i++ ){
+  //         let inputDate = films[i].watchDate;
+  //         console.log("inputDate", inputDate);
+  //         // Calcola la differenza in millisecondi
+  //         const diffInMs = today - inputDate;
+  //         console.log("diffInMs",diffInMs);
+  //         // Convertila in giorni
+  //         const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+  //         console.log("diffInDays",diffInDays);
+  //         // Restituisce true se la data è più vecchia di 30 giorni
+  //         if(diffInDays <= 30){
+  //           newFilmsArray[j]=films[i];
+  //           j++;
+  //         }
+  //     }
+  //     resolve(newFilmsArray);
   //   });
   // };
 
+  this.getAllLastMonth = () => {
+    return new Promise((resolve, reject) => {
+      const today = dayjs();
+      const thirtyDaysAgo = today.subtract(30, 'day');
   
+      const query = `
+        SELECT * FROM films 
+        WHERE watchdate IS NOT NULL 
+        AND watchdate >= ? 
+        AND watchdate <= ?
+      `;
+      db.all(query, [thirtyDaysAgo.format('YYYY-MM-DD'), today.format('YYYY-MM-DD')], (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
+          resolve(films);
+        }
+      });
+    });
+  };
+
+  //api 7
   this.getAllUnseen = () => { 
     return new Promise((resolve, reject) => { //watchdate
       const query = 'SELECT * FROM films WHERE watchdate IS NULL ' ;
@@ -294,6 +330,7 @@ function FilmLibrary() {
     });
   };
 
+  //api 7
   this.getAllBest = () => { 
     return new Promise((resolve, reject) => { //watchdate
       const query = 'SELECT * FROM films WHERE rating =5' ;
