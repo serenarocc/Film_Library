@@ -167,7 +167,7 @@ app.post('/api/films',
 app.put('/api/films/rating/:delta',
   [ // These checks will apply to the req.body part
     check('id').isInt({min: 1}),
-    check('deltaRating').isInt({ min: -4, max: 4 }),
+    //check('delta').isInt({ min: -4, max: 4 }),
   ],
   async (req, res) => {
      // Is there any validation error?
@@ -220,6 +220,11 @@ app.delete('/api/films/:id',
   console.log('prima di try');
   try {
 
+    //check if id exist in db
+    const film = await library.getWithId(filmId); 
+    if (film.error)   // If not found, the function returns a resolved promise with an object where the "error" field is set
+         film.status(404).json(film);
+   
     await library.deleteWithId(filmId); 
     console.log('dopo delete');
     res.status(204).end(); //no content processato con successo ma non ritorna niente perche hai fatto delete 
