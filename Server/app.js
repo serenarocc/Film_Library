@@ -1,21 +1,39 @@
-'use strict';
-
+'use strict'; //Impedisce comportamenti ambigui (es. usare variabili non dichiarate).
+//Questa variabile abilita o disabilita la funzionalità di cancellazione dei film (mostra o nasconde l’icona del cestino nella tabella).
 const deleteOption = true;  // Enable or disable the optional part of the lab
 
 // --- Definining Film & FilmLibrary --- //
 
+
+/**
+ * È una funzione costruttrice, cioè crea oggetti Film con proprietà e metodi:
+        Proprietà:
+            - id, title, favorite, rating
+            - watchDate → oggetto dayjs, se presente
+        Metodi (inseriti direttamente sull'istanza):
+            - isFavorite, isBestRated, isSeenLastMonth, isUnseen
+            - toString(), formatWatchDate(), formatRating()
+    Questi metodi servono per applicare i filtri o formattare i dati per la visualizzazione.
+ */
 function Film(id, title, isFavorite = false, watchDate, rating = 0) {
     this.id = id;
     this.title = title;
     this.favorite = isFavorite;
     this.rating = rating;
     // saved as dayjs object only if watchDate is truthy
-    this.watchDate = watchDate && dayjs(watchDate);
+    this.watchDate = watchDate && dayjs(watchDate);  //Se è stata passata una data (watchDate), la converte in oggetto dayjs, altrimenti sarà undefined
 
     // Filters
-    this.isFavorite =   () => { return this.favorite; }
-    this.isBestRated =  () => { return this.rating === 5; }
+    this.isFavorite =   () => { return this.favorite; } //Ritorna true se il film è preferito.
+    this.isBestRated =  () => { return this.rating === 5; } //Ritorna true se il film ha voto massimo (5 stelle)
 
+
+    /**
+     * 
+     *Controlla se il film è stato visto nell’ultimo mese:
+      diff è la differenza tra la data del film e oggi in mesi.
+      Se è compresa tra -1 e 0, è stato visto il mese scorso.
+     */
     this.isSeenLastMonth = () => {
         if(!this.watchDate) return false;         // no watchDate
         const diff = this.watchDate.diff(dayjs(),'month')
@@ -23,32 +41,42 @@ function Film(id, title, isFavorite = false, watchDate, rating = 0) {
         return ret;
     }
 
-    this.isUnseen = () => {
+    this.isUnseen = () => {//Ritorna true se non ha una data di visione → quindi non è ancora stato visto.
         if(!this.watchDate) return true;     // no watchdate
         else return false;
     }
     
-    this.toString = () => {
+    this.toString = () => {  //Restituisce una stringa descrittiva dell’oggetto film
         return `Id: ${this.id}, ` +
         `Title: ${this.title}, Favorite: ${this.favorite}, ` +
         `Watch date: ${this.formatWatchDate('YYYY-MM-DD')}, ` +
         `Score: ${this.formatRating()}`;
     }
   
-    this.formatWatchDate = (format) => {
+    this.formatWatchDate = (format) => {  //Restituisce la data formattata (es. "2024-04-10") oppure una stringa "non definita"
         return this.watchDate ? this.watchDate.format(format) : '<not defined>';
     }
   
-    this.formatRating = () => {
+    this.formatRating = () => {  //Restituisce il voto se esiste, altrimenti la stringa "non assegnato".
         return this.rating ? this.rating : '<not assigned>';
     }
 }
 
+/*
+Una libreria che contiene tanti Film.
+Proprietà:
+    - list: un array di film
+Metodi:
+    - add(film): aggiunge un film
+    - delete(id): rimuove un film per ID
+    - filterAll, filterByFavorite, filterByBestRated, filterBySeenLastMonth, filterByUnseen: filtri predefiniti
+Ogni filtro restituisce una nuova lista filtrata, senza modificare l’originale.
+*/
 function FilmLibrary() {
-    this.list = [];
+    this.list = [];//Crea una libreria di film (array interno chiamato list)
 
     this.add = (film) => {
-        this.list = [...this.list, film];
+        this.list = [...this.list, film]; //Aggiunge un film alla libreria, usando lo spread operator (crea una nuova copia dell'array con l'elemento in più)
         
         /*
         if (!this.list.some(f => f.id == film.id))
@@ -60,6 +88,7 @@ function FilmLibrary() {
     // In the following methods we are using the "filter" method.
     // This method RETURNS A COPY of the "list" array, not the array itself, so we PRESERVE THE ORIGINAL array.
 
+    //Tutti questi metodi usano .filter() per creare una nuova lista filtrata:
     this.filterAll = () => {
         return this.list.filter( () => true);
     }
@@ -81,7 +110,7 @@ function FilmLibrary() {
     }
 
     // This function permanently delete one element from the library
-    this.delete = (id) => {
+    this.delete = (id) => {  //Rimuove il film con l’id specificato
         this.list = this.list.filter( f => f.id != id );
     }
 
@@ -94,9 +123,17 @@ function FilmLibrary() {
  * Function to create a single film enclosed in a <tr> tag.
  * @param {*} film the film object.
  */
-function createFilmNode(film) {
+/**
+ * Crea dinamicamente una riga HTML <tr> per ogni film:
+    - <td> con il titolo
+    - Checkbox per "preferito"
+    - Data (formattata)
+    - Stelle per il voto
+    - Icona per cancellare (se deleteOption è attivo)
+ */
+function createFilmNode(film) {//
 
-    const tr = document.createElement('tr');
+    const tr = document.createElement('tr'); 
     //tr.id = "film" + film.id;
 
     // creating a <p> for the title
@@ -202,6 +239,12 @@ function clearListFilms() {
  * @param {string}   titleText The text to put in the film list content h1 header.
  * @param {function} filterFn  The function that does the filtering and returns an array of gilms.
  */
+
+/*Gestisce i filtri selezionati dalla sidebar:
+   - Toglie la classe active da tutti i link.
+   - Imposta il titolo attuale.
+    - Applica il filtro.
+    Se deleteOption è attivo, registra l'evento di cancellazione su ogni icona cestino. */
 function filterFilms( filterId, titleText, filterFn ) {
     
     document.querySelectorAll('#left-sidebar div a ').forEach( node => node.classList.remove('active'));
@@ -228,6 +271,9 @@ function filterFilms( filterId, titleText, filterFn ) {
 
 
 // ----- Main ----- //
+/**Crea una nuova libreria.
+Aggiunge tutti i film da un array globale FILMS 
+Applica subito il filtro "All". */
 const filmLibrary = new FilmLibrary();
 FILMS.forEach(f => { filmLibrary.add(new Film(...f)); })
 filterFilms( 'filter-all', 'All', filmLibrary.filterAll );
@@ -235,6 +281,12 @@ filterFilms( 'filter-all', 'All', filmLibrary.filterAll );
 
 
 // --- Creating Event Listeners for filters --- //
+/**
+Un handler è una funzione che viene eseguita automaticamente quando accade un certo evento nella pagina web.
+Un handler è "quello che succede quando clicchi" su qualcosa.
+*/
+/*Quando clicchi su un filtro: Viene richiamata filterFilms(...)
+Si aggiorna il contenuto della tabella*/
 document.getElementById("filter-all").addEventListener( 'click', event => 
     filterFilms( 'filter-all', 'All', filmLibrary.filterAll )
 );
