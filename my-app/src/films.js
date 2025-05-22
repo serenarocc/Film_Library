@@ -1,7 +1,3 @@
-/* 
- * Web Applications
- */
-
 import dayjs from 'dayjs';
 
 /* 
