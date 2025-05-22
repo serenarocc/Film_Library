@@ -1,25 +1,22 @@
-/*
- * Web Applications
- */
+import 'bootstrap/dist/css/bootstrap.min.css';  //carica css di bootstrap 5 - permette di usare le classi di stile
+import 'bootstrap-icons/font/bootstrap-icons.css'; //carica css bootstrap icons
+import './App.css'; //carica css App.css
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import './App.css';
-
-import dayjs from 'dayjs';
+import dayjs from 'dayjs'; //libreria per gestire le date
 
 import { React, useState } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap'; //mappano le classi di layout bootstrap su componenti react
 
-import FILMS from './films';
+import FILMS from './films'; //è l'array di films
 
-import { Navigation } from './components/Navigation';
-import { Filters } from './components/Filters';
-import { FilmTable } from './components/FilmLibrary';
+import { Navigation } from './components/Navigation';  //componenti di prestazione
+import { Filters } from './components/Filters'; //componenti di prestazione
+import { FilmTable } from './components/FilmLibrary'; //componenti di prestazione
 
-function App() {
+//è il root component dell'app. Tutto ciò è eseuito ad ogni render
+function App() { 
 
-  const activeFilter = 'filter-all';
+  const activeFilter = 'filter-all'; //stato filto attivo
 
   /**
    * Defining a structure for Filters
@@ -55,25 +52,25 @@ function App() {
   //const filterArray = filtersToArray.map(([filterName, { label }]) => ({ filterName, label }));
 
   return (
-    <Container fluid>
+    <Container fluid> //tutto è racchiuso nel conteiner bootstrap a tutta larghezza
       <Row>
         <Col>
-          <Navigation />
+          <Navigation /> //barra di navigazione
         </Col>
       </Row>
 
-      <Row>
-        <Col xs={3}>
+      <Row> //area principle divisa in due colonne
+        <Col xs={3}> //sx lista dei filtri
           <Filters items={filterArray} selected={activeFilter} />
         </Col>
 
-        <Col xs={9}>
-          <div className="d-flex flex-row justify-content-between">
+        <Col xs={9}> //dx titolo filtro corrrente, bottone +, tabella dei film
+          <div className="d-flex flex-row justify-content-between">  //d-flex flexbox d-flex tiene il titolo a sx e il bottone + a dx
             <h1 className="my-2">Filter: <span>{filters[activeFilter].label}</span></h1>
             <Button variant="primary" className="my-2">&#43;</Button>
           </div>
-          <FilmTable activeFilter={filters[activeFilter].label}
-            films={FILMS.filter(filters[activeFilter].filterFunction)} />
+          <FilmTable activeFilter={filters[activeFilter].label}//label da mostrare nel componente
+            films={FILMS.filter(filters[activeFilter].filterFunction)} />//array films che viene filtrato in base al filtro attivo
         </Col>
       </Row>
     </Container>
@@ -81,4 +78,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; //esportazione
