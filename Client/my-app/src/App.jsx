@@ -15,6 +15,27 @@ import { Filters } from './components/Filters.jsx'
 
 function App() {
 
+  const activeFilter = 'filter-all';
+
+  const filters = {
+    'filter-all': {label: 'All', id: 'filter-all', filterFunction: () => true},
+    'filter-favorite': {label: 'Favorites', id: 'filter-favorite', filterFunction: () => film.favorite},
+    'filter-best': {label: 'Best Rated', id: 'filter-best', filterFunction: () => film.rating >= 5},
+    'filter-lastmonth': {label: 'Seen Last Month', id: 'filter-lasthmonth', filterFunction: () => isSeenLastMonth(film)},
+    'filter-unseen': {label: 'Unseen', id: 'filter-unseen', filterFunction: () => film.watchDate ? false : true},
+  }
+
+  const isSeenLastMonth = (film) => {
+    if('watchDate' in film) {
+      const diff = film.watchDate.diff(dayjs(), 'month');
+      const isLastMonth = diff <= 0 && diff > -1;
+      return isLastMonth;
+    }
+  }
+
+  const filtersToArray = Object.entries(filters);
+  const filterArray = filtersToArraay.map( e => ({filterName: e[0], label: e[1].label}));
+
   return (
     <Container fluid>
 
@@ -26,7 +47,7 @@ function App() {
 
         <Row>
           <Col xs={3}>
-               <Filters/>
+               <Filters items={filterArray} selected={activeFilter} />
           </Col>
         </Row>
 
