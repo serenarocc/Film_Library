@@ -26,14 +26,20 @@ const Filters = (props) => {
            // Itera sull'array dei filtri per creare un ListGroup.Item per ognuno
           items.map( e => {
             return (
+              /*  Ogni item sarà renderizzato come <li> (lista non ordinata) */
+              /*  Chiave unica richiesta da React per il rendering efficiente*/
+              /*  Attributo richiesto da Bootstrap per rendere l'item cliccabile */
+              /*  Abilita l'interattività visiva sull'item*/
+              /*  Attiva lo stile se il filtro corrente è selezionato*/
+              /*  Etichetta visibile del filtro (es. "All", "Favorites", etc.)*/
               <ListGroup.Item
-                  as="li"                         // Ogni item sarà renderizzato come <li> (lista non ordinata)
-                  key={e.filterName}              // Chiave unica richiesta da React per il rendering efficiente
-                  href={'#'}                      // Attributo richiesto da Bootstrap per rendere l'item cliccabile
-                  action                          // Abilita l'interattività visiva sull'item
-                  active={selected === e.filterName ? true : false} // Attiva lo stile se il filtro corrente è selezionato
+                  as="li"                          
+                  key={e.filterName}               
+                  href={'#'}                   
+                  action                        
+                  active={selected === e.filterName ? true : false} 
                   >
-                  {e.label}                        // Etichetta visibile del filtro (es. "All", "Favorites", etc.)
+                  {e.label}                       
               </ListGroup.Item>
             );
           })
