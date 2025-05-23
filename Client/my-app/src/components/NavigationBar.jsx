@@ -31,6 +31,7 @@ const NavigationBar = () => {
                     </Nav.Link>
                 </Nav.Item>
             </Nav>
+            
         </Navbar>
     );
 }

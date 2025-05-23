@@ -1,30 +1,40 @@
-import { useState } from 'react'
-import { NavigationBar } from './components/NavigationBar.jsx' // . è come sono in questa cartella
-import { Sidebar } from './components/Sidebar.jsx'
-
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { Container, Row } from 'react-bootstrap';
+
+import dayjs from 'dayjs';
+
+import { React, useState } from 'react';
+import { Container, Row, Col, Button} from 'react-bootstrap';
+
+import FILMS from './films';
+
+import { NavigationBar } from './components/NavigationBar.jsx' // . è come sono in questa cartella
+import { Filters } from './components/Filters.jsx'
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <Container >
-      <Row>
-          <NavigationBar/>
-      </Row>
+    <Container fluid>
 
-      <Row>
-           <Sidebar/>
-      </Row>
+        <Row>
+          <Col>
+              <NavigationBar/>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={3}>
+               <Filters/>
+          </Col>
+        </Row>
 
 
     </Container>
       
      
-  )
+  );
 }
 
-export default App
+export default App;
