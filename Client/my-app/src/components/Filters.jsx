@@ -24,7 +24,9 @@ const Filters = (props) => {
     <ListGroup as="ul" className="my-2">
         {
            // Itera sull'array dei filtri per creare un ListGroup.Item per ognuno
-          items.map( e => {
+           // map traforma gli elem da un tipo ad un altro. ogni filtro si deve trasformare in quel codice html
+          //map = stai trasformando 
+           items.map( e => {
             return (
               /*  Ogni item sarà renderizzato come <li> (lista non ordinata) */
               /*  Chiave unica richiesta da React per il rendering efficiente*/

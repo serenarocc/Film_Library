@@ -13,19 +13,33 @@ import FILMS from './films'; // Importazione della lista dei film
 import { NavigationBar } from './components/NavigationBar.jsx' // . è come sono in questa cartella
 import { Filters } from './components/Filters.jsx'
 import { FilmTable } from './components/FilmList.jsx';
+import {AddFilmForm} from './components/AddFilmForm.jsx';
 
 
 function App() {
     
   //const activeFilter = 'filter-all';// Filtro attivo
-  const [filmList, setFilmList] = useState(FILMS);
+  // primo variabile che matiene lo stato attuale
+  //secondo la funz che setta quello stato
+  const [filmList, setFilmList] = useState(FILMS); //hook mantiene lo stato - stato iniziale
 
-  const [activeFilter, setActiveFilter] = useState('filter-all');
+  const [activeFilter, setActiveFilter] = useState('filter-all');//use state ritorna un valore e una funzione
 
+  const [activeAddFilm, setActiveAddFilm] = useState(false);
+  
   // Definizione dei filtri disponibili, con etichetta, id e funzione per filtrare
+  //mappa json
   const filters = {
-    'filter-all': { label: 'All', id: 'filter-all', filterFunction: () => true },
-    'filter-favorite': { label: 'Favorites', id: 'filter-favorite', filterFunction: film => film.favorite },
+    //key                //value
+    'filter-all': { label: 'All', id: 'filter-all', filterFunction: () => true }, //applica funz che ritorna sempre true
+
+    'filter-favorite': { 
+      label: 'Favorites', 
+      id: 'filter-favorite', 
+      filterFunction: film => film.favorite 
+    }, //nome temporaneo al singolo elem dell'array a cui apllico quella funz
+    //e come se facessi un foreach. favorite è booleano 
+
     'filter-best': { label: 'Best Rated', id: 'filter-best', filterFunction: film => film.rating >= 5 },
     'filter-lastmonth': { label: 'Seen Last Month', id: 'filter-lastmonth', filterFunction: film => isSeenLastMonth(film) },
     'filter-unseen': { label: 'Unseen', id: 'filter-unseen', filterFunction: film => film.watchDate ? false : true }
@@ -41,12 +55,16 @@ function App() {
   }
 
   //Conversione dell’oggetto filters in un array, utile per i componenti figli
-  const filtersToArray = Object.entries(filters);
+  const filtersToArray = Object.entries(filters);// traforma in un array di entries. dove entries sono le coppie chiave, valore di quella mappa
   console.log(JSON.stringify(filtersToArray));
-  const filterArray = filtersToArray.map(([filterName, { label }]) => ({ filterName: filterName, label: label })); 
+  //                                       nomi fitizzi tupla 1 key della entry, 2 solo la label 
+  const filterArray = filtersToArray.map(([filterName, { label }]) => ({
+     filterName: filterName,
+      label: label 
+    })); 
 
   function deleteFilm(filmId){
-    setFilmList(filmList => filmList.filter (e => e.id !==filmId));
+    setFilmList(filmList => filmList.filter (e => e.id !==filmId)); //resti
   }
 
   // Render dell’interfaccia utente
@@ -75,13 +93,19 @@ function App() {
                   {/* Titolo dinamico con il nome del filtro attivo */}
                   <h1 className="my-2">Filter: <span>{filters[activeFilter].label}</span></h1>
                   {/* Bottone per aggiungere un film */}
-                  <Button variant="primary" className="my-2">&#43;</Button>
+                  {!activeAddFilm && (<Button variant="primary" className="my-2"
+                                      onClick={() => { setActiveAddFilm(true)}}>&#43; 
+                                      </Button>)}
               </div>
               
                {/* Tabella dei film filtrati in base al filtro attivo */}
               <FilmTable activeFilter={filters[activeFilter].label}
                 films={filmList.filter(filters[activeFilter].filterFunction)}
                 delete = {deleteFilm} />
+
+               <div>
+               {activeAddFilm && (<AddFilmForm/>)}
+               </div> 
            </Col>
 
         </Row>
