@@ -17,16 +17,19 @@ import { FilmTable } from './components/FilmList.jsx';
 
 function App() {
     
-  const activeFilter = 'filter-all';// Filtro attivo
+  //const activeFilter = 'filter-all';// Filtro attivo
+  const [filmList, setFilmList] = useState(FILMS);
+
+  const [activeFilter, setActiveFilter] = useState('filter-all');
 
   // Definizione dei filtri disponibili, con etichetta, id e funzione per filtrare
   const filters = {
-    'filter-all': {label: 'All', id: 'filter-all', filterFunction: () => true},
-    'filter-favorite': {label: 'Favorites', id: 'filter-favorite', filterFunction: () => film.favorite},
-    'filter-best': {label: 'Best Rated', id: 'filter-best', filterFunction: () => film.rating >= 5},
-    'filter-lastmonth': {label: 'Seen Last Month', id: 'filter-lasthmonth', filterFunction: () => isSeenLastMonth(film)},
-    'filter-unseen': {label: 'Unseen', id: 'filter-unseen', filterFunction: () => film.watchDate ? false : true},
-  }
+    'filter-all': { label: 'All', id: 'filter-all', filterFunction: () => true },
+    'filter-favorite': { label: 'Favorites', id: 'filter-favorite', filterFunction: film => film.favorite },
+    'filter-best': { label: 'Best Rated', id: 'filter-best', filterFunction: film => film.rating >= 5 },
+    'filter-lastmonth': { label: 'Seen Last Month', id: 'filter-lastmonth', filterFunction: film => isSeenLastMonth(film) },
+    'filter-unseen': { label: 'Unseen', id: 'filter-unseen', filterFunction: film => film.watchDate ? false : true }
+  };
 
   // Funzione che verifica se un film è stato visto l'ultimo mese
   const isSeenLastMonth = (film) => {
@@ -39,7 +42,12 @@ function App() {
 
   //Conversione dell’oggetto filters in un array, utile per i componenti figli
   const filtersToArray = Object.entries(filters);
-  const filterArray = filtersToArray.map( e => ({filterName: e[0], label: e[1].label}));
+  console.log(JSON.stringify(filtersToArray));
+  const filterArray = filtersToArray.map(([filterName, { label }]) => ({ filterName: filterName, label: label })); 
+
+  function deleteFilm(filmId){
+    setFilmList(filmList => filmList.filter (e => e.id !==filmId));
+  }
 
   // Render dell’interfaccia utente
   return (
@@ -55,7 +63,8 @@ function App() {
 
           <Col xs={3}> 
                 {/* Colonna dei filtri */}
-               <Filters items={filterArray} selected={activeFilter} />
+                <Filters items={filterArray} selected={activeFilter} onSelect={setActiveFilter} />
+               
           </Col>
 
 
@@ -71,7 +80,8 @@ function App() {
               
                {/* Tabella dei film filtrati in base al filtro attivo */}
               <FilmTable activeFilter={filters[activeFilter].label}
-                films={FILMS.filter(filters[activeFilter].filterFunction)} />
+                films={filmList.filter(filters[activeFilter].filterFunction)}
+                delete = {deleteFilm} />
            </Col>
 
         </Row>
