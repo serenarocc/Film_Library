@@ -1,11 +1,11 @@
 import 'dayjs';// Importazione della libreria dayjs
-import { Table, Form } from 'react-bootstrap';// Importazione di componenti da React-Bootstrap per creare tabelle e form
+import { Table, Form, Button } from 'react-bootstrap';// Importazione di componenti da React-Bootstrap per creare tabelle e form
 
 // Componente principale che mostra una tabella di film
 function FilmTable(props) {
   // const films = props.films;
   // Estrae direttamente la proprietà 'films' dall'oggetto props usando la destrutturazione
-  const { films } = props;
+  const { films, activeFilter } = props;
 
   return (
     <Table>
@@ -16,13 +16,14 @@ function FilmTable(props) {
           <th className="text-center">Favorite</th>
           <th>Last seen</th>
           <th>Rating</th>
+          <th>Actions</th> 
         </tr>
       </thead>
       <tbody>
          {/* Mappa l’array di film ricevuto come prop e crea una riga per ciascun film */}
         {films.map((film) => 
           // Chiama il componente FilmRow per ogni film, passando i dati come prop
-        <FilmRow filmData={film} key={film.id} />)}
+        <FilmRow filmData={film} key={film.id} delete={props.delete} />)}
       </tbody>
     </Table>
   );
@@ -62,6 +63,14 @@ function FilmRow(props) {
         <td>
           <Rating rating={props.filmData.rating} maxStars={5} />
         </td>
+
+        <td>
+        <Button variant='danger'
+          onClick={() => { props.delete(props.filmData.id) }} >
+          <i className='bi bi-trash'></i>
+        </Button>
+      </td>
+
     </tr>
   );
 }

@@ -17,7 +17,7 @@ import {ListGroup} from 'react-bootstrap'; // Importazione del componente ListGr
  */ 
 
 const Filters = (props) => {
-  const {items, selected } = props; // Destrutturazione delle props per ottenere `items` (la lista dei filtri) e `selected` (filtro attivo)
+  const {items, selected, onSelect } = props; // Destrutturazione delle props per ottenere `items` (la lista dei filtri) e `selected` (filtro attivo)
 
   return (
      // Creazione di una lista visuale (ListGroup) con margine verticale (my-2)
@@ -38,6 +38,7 @@ const Filters = (props) => {
                   href={'#'}                   
                   action                        
                   active={selected === e.filterName ? true : false} 
+                  onClick={() => onSelect(e.filterName)}
                   >
                   {e.label}                       
               </ListGroup.Item>
