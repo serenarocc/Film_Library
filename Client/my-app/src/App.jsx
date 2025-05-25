@@ -67,6 +67,12 @@ function App() {
     setFilmList(filmList => filmList.filter (e => e.id !==filmId)); //resti
   }
 
+  function addFilm (film){
+    setFilmList(filmList => [...filmList,film]);
+    console.log(filmList);
+    setActiveAddFilm(false);
+  }
+
   // Render dell’interfaccia utente
   return (
     <Container fluid>
@@ -104,7 +110,8 @@ function App() {
                 delete = {deleteFilm} />
 
                <div>
-               {activeAddFilm && (<AddFilmForm/>)}
+               {activeAddFilm && (<AddFilmForm
+                addFilm = {addFilm}/>)}
                </div> 
            </Col>
 
