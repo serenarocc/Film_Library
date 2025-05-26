@@ -117,9 +117,15 @@ function App() {
                   {/* Titolo dinamico con il nome del filtro attivo */}
                   <h1 className="my-2">Filter: <span>{filters[activeFilter].label}</span></h1>
                   {/* Bottone per aggiungere un film */}
-                  {!activeAddFilm && (<Button variant="primary" className="my-2"
-                                      onClick={() => { setActiveAddFilm(true)}}>&#43; 
-                                      </Button>)}
+                   {!activeAddFilm && !activeEditFilm && (
+                    <Button variant="primary" className="my-2"
+                      onClick={() => {
+                        setActiveAddFilm(true);
+                        setFilmToEdit(null); // assicurati che il form non sia precompilato
+                      }}>
+                      &#43;
+                    </Button>
+                  )}
               </div>
               
                {/* Tabella dei film filtrati in base al filtro attivo */}
