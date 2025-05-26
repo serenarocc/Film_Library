@@ -23,7 +23,14 @@ function FilmTable(props) {
          {/* Mappa l’array di film ricevuto come prop e crea una riga per ciascun film */}
         {films.map((film) => 
           // Chiama il componente FilmRow per ogni film, passando i dati come prop
-        <FilmRow filmData={film} key={film.id} delete={props.delete} />)}
+          <FilmRow
+          filmData={film}
+          key={film.id}
+          delete={props.delete}
+          editFilm={props.editFilm}
+          setFilmToEdit={props.setFilmToEdit}
+          setActiveEditFilm={props.setActiveEditFilm}
+        />)}
       </tbody>
     </Table>
   );
@@ -69,10 +76,15 @@ function FilmRow(props) {
           onClick={() => { props.delete(props.filmData.id) }} >
           <i className='bi bi-trash'></i>
         </Button>
-        <Button className="mx-2" variant='warning'  
-          onClick={() => { props.editFilm(props.filmData); props.setShowForm(true); }} >
+
+        <Button className="mx-2" variant='warning'
+          onClick={() => {
+            props.setFilmToEdit(props.filmData); 
+            props.setActiveEditFilm(true);       
+          }}>
           <i className='bi bi-pencil'></i>
         </Button>
+
       </td>
 
     </tr>

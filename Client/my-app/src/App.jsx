@@ -29,6 +29,8 @@ function App() {
 
   const [activeEditFilm, setActiveEditFilm] = useState(false);
 
+  const [filmToEdit, setFilmToEdit] = useState(null);//cosi sai quale film devi modificare
+
   // Definizione dei filtri disponibili, con etichetta, id e funzione per filtrare
   //mappa json
   const filters = {
@@ -121,19 +123,28 @@ function App() {
               </div>
               
                {/* Tabella dei film filtrati in base al filtro attivo */}
-              <FilmTable activeFilter={filters[activeFilter].label}
+              <FilmTable
+                activeFilter={filters[activeFilter].label}
                 films={filmList.filter(filters[activeFilter].filterFunction)}
-                delete = {deleteFilm} />
+                delete={deleteFilm}
+                editFilm={editFilm}
+                setFilmToEdit={setFilmToEdit}
+                setActiveEditFilm={setActiveEditFilm}
+              />
 
                <div>
                {activeAddFilm && (<AddFilmForm
                 addFilm = {addFilm}/>)}
                </div> 
 
-               <div>
-               {activeEditFilm && (<AddFilmForm
-                editFilm = {editFilm}/>)}
-               </div> 
+               {activeEditFilm && (
+                  <AddFilmForm
+                    editFilm={editFilm}
+                    filmToEdit={filmToEdit}
+                  />
+                )}
+
+
            </Col>
 
         </Row>

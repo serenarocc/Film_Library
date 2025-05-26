@@ -6,29 +6,32 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import dayjs from 'dayjs';
 
-function AddFilmForm(props) {
+function AddFilmForm({ addFilm, editFilm, filmToEdit }) {
   const [validated, setValidated] = useState(false);
+
+  const isEdit = !!filmToEdit;
+
+  const [formData, setFormData] = useState({
+    title: filmToEdit?.title || "",
+    favorite: filmToEdit?.favorite || false,
+    rating: filmToEdit?.rating || 0,
+    watchDate: filmToEdit?.watchDate?.format("YYYY-MM-DD") || ""
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    const title = event.target.elements.title.value;
-    const favorite = event.target.elements.favorite.checked;
-    const rating = event.target.elements.rating.value;
-    const watchdate = event.target.elements.watchdate.value;
-
     const newFilm = {
-      id: Math.floor(Math.random() * 10000),  // meglio un id dinamico se non hai un gestore di ID
-      title,
-      favorite,
-      watchDate: watchdate ? dayjs(watchdate) : undefined,
-      rating: parseInt(rating)
+      id: isEdit ? filmToEdit.id : Math.floor(Math.random() * 10000),
+      title: formData.title,
+      favorite: formData.favorite,
+      watchDate: formData.watchDate ? dayjs(formData.watchDate) : undefined,
+      rating: parseInt(formData.rating)
     };
-
-    props.addFilm(newFilm);
+    isEdit ? editFilm(newFilm) : addFilm(newFilm);
     setValidated(true);
   };
 
+  
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <Row className="mb-3">
