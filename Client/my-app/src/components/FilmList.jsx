@@ -69,12 +69,16 @@ function FilmRow(props) {
           onClick={() => { props.delete(props.filmData.id) }} >
           <i className='bi bi-trash'></i>
         </Button>
+        <Button className="mx-2" variant='warning'  
+          onClick={() => { props.editFilm(props.filmData); props.setShowForm(true); }} >
+          <i className='bi bi-pencil'></i>
+        </Button>
       </td>
 
     </tr>
   );
 }
-
+//editFilm  setFilmToEdit
 // Componente per visualizzare una valutazione con stelle
 function Rating(props) {
   // Create an array with props.maxStars elements, then run map to create the JSX elements for the array 

@@ -26,7 +26,9 @@ function App() {
   const [activeFilter, setActiveFilter] = useState('filter-all');//use state ritorna un valore e una funzione
 
   const [activeAddFilm, setActiveAddFilm] = useState(false);
-  
+
+  const [activeEditFilm, setActiveEditFilm] = useState(false);
+
   // Definizione dei filtri disponibili, con etichetta, id e funzione per filtrare
   //mappa json
   const filters = {
@@ -73,6 +75,20 @@ function App() {
     setActiveAddFilm(false);
   }
 
+  function editFilm(film) {
+    setFilmList( (films) => films.map( e=> {
+      if (e.id === film.id){
+        setActiveEditFilm(false);
+        return Object.assign({}, film);
+      }
+      else{
+        setActiveEditFilm(false);
+        return e;
+      }
+        
+    }))
+  }
+
   // Render dell’interfaccia utente
   return (
     <Container fluid>
@@ -112,6 +128,11 @@ function App() {
                <div>
                {activeAddFilm && (<AddFilmForm
                 addFilm = {addFilm}/>)}
+               </div> 
+
+               <div>
+               {activeEditFilm && (<AddFilmForm
+                editFilm = {editFilm}/>)}
                </div> 
            </Col>
 
