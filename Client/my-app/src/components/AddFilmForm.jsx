@@ -31,30 +31,58 @@ function AddFilmForm({ addFilm, editFilm, filmToEdit }) {
     setValidated(true);
   };
 
-  
+
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
       <Row className="mb-3">
         <Form.Group as={Col} md="6" controlId="validationCustom01">
           <Form.Label>Title</Form.Label>
-          <Form.Control required type="text" name="title" placeholder="Film title" />
+           <Form.Control
+              required
+              type="text"
+              name="title"
+              placeholder="Film title"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            />
         </Form.Group>
 
         <Form.Group as={Col} md="6" controlId="validationCustom02">
           <Form.Label>Favorite</Form.Label>
-          <Form.Check type="checkbox" name="favorite" label="Mark as Favorite" />
+          <Form.Check
+            type="checkbox"
+            name="favorite"
+            label="Mark as Favorite"
+            checked={formData.favorite}
+            onChange={(e) => setFormData({ ...formData, favorite: e.target.checked })}
+          />
         </Form.Group>
       </Row>
 
       <Row className="mb-3">
         <Form.Group as={Col} md="6" controlId="validationCustomUsername">
           <Form.Label>Watch Date</Form.Label>
-          <Form.Control type="date" name="watchdate" />
+          <Form.Control
+            type="date"
+            name="watchdate"
+            value={formData.watchDate}
+            onChange={(e) => setFormData({ ...formData, watchDate: e.target.value })}
+          />
+
         </Form.Group>
 
         <Form.Group as={Col} md="6" controlId="validationCustom03">
           <Form.Label>Rating</Form.Label>
-          <Form.Control type="number" name="rating" placeholder="Rating (0-5)" required min={0} max={5} />
+          <Form.Control
+            type="number"
+            name="rating"
+            placeholder="Rating (0-5)"
+            required
+            min={0}
+            max={5}
+            value={formData.rating}
+            onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
+          />
         </Form.Group>
       </Row>
 
