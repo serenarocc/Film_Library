@@ -12,10 +12,10 @@ function AddFilmForm({ addFilm, editFilm, filmToEdit }) {
   const isEdit = !!filmToEdit;
 
   const [formData, setFormData] = useState({
-    title: filmToEdit?.title || "",
-    favorite: filmToEdit?.favorite || false,
-    rating: filmToEdit?.rating || 0,
-    watchDate: filmToEdit?.watchDate?.format("YYYY-MM-DD") || ""
+    title: filmToEdit? filmToEdit.title : "",
+    favorite: filmToEdit? filmToEdit.favorite : false,
+    rating: filmToEdit? filmToEdit.rating : 0,
+    watchDate: filmToEdit? filmToEdit.watchDate?.format("YYYY-MM-DD") : ""
   });
 
   const handleSubmit = (event) => {

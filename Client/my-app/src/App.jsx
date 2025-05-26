@@ -145,8 +145,8 @@ function App() {
 
                {activeEditFilm && (
                   <AddFilmForm
-                    editFilm={editFilm}
                     filmToEdit={filmToEdit}
+                    editFilm={editFilm}
                   />
                 )}
 
