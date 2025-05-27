@@ -74,7 +74,7 @@ function NotFoundLayout(props) {
   
         <Row>
           <Col xs={3}>
-            <Filters filterArray={props.filterArray} />
+            <Filters items={props.filterArray} />
           </Col>
   
           <Col xs={9}>

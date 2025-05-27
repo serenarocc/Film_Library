@@ -77,7 +77,7 @@ function App() {
   function addFilm (film){
     setFilmList(filmList => [...filmList,film]);
     console.log(filmList);
-    setActiveAddFilm(false);
+   // setActiveAddFilm(false);
   }
 
   function editFilm(film) {
