@@ -1,7 +1,3 @@
-/*
- * Web Applications
- */
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
@@ -19,13 +15,6 @@ import { GenericLayout, NotFoundLayout, TableLayout, AddLayout, EditLayout } fro
 function App() {
 
   const [filmList, setFilmList] = useState(FILMS);
-
-  // This state contains the active filter
-  //const [activeFilter, setActiveFilter] = useState('filter-all');
-
-  //const [filmToEdit, setFilmToEdit] = useState(undefined);  // Not needed anymore, the info is embedded in the URL
-  //const [showForm, setShowForm] = useState(false);  // Not needed anymore, the info is embedded in the URL
-
   /**
    * Defining a structure for Filters
    * Each filter is identified by a unique name and is composed by the following fields:
@@ -50,17 +39,11 @@ function App() {
   }
 
   const filtersToArray = Object.entries(filters);
-  //console.log(JSON.stringify(filtersToArray));
 
-  // NB: to implicitly return an object in an arrow function, use () around the object {}
-  // const filterArray = filtersToArray.map( e => ({filterName: e[0], ...e[1]}) );
-  // alternative with destructuring directly in the parameter of the callback 
   const filterArray = filtersToArray.map(([filterName, obj ]) =>
      ({ filterName: filterName, ...obj }));
 
   function deleteFilm(filmId) {
-    // changes the state by passing a callback that will compute, from the old Array,
-    // a new Array where the filmId is not present anymore
     setFilmList(filmList => filmList.filter(e => e.id!==filmId));
   }
 
@@ -75,11 +58,8 @@ function App() {
 
   function addFilm(film) {
     setFilmList( (films) => {
-      // In the complete application, the newFilmId value should come from the backend server.
-      // NB: This is NOT to be used in a real application: the new id MUST NOT be generated on the client.
-      // However, we need it now to make everything work smoothly
-      const newFilmId = Math.max( ...(films.map(e => e.id)))+1;
-      return [...films, {"id": newFilmId, ...film}];
+        const newFilmId = Math.max( ...(films.map(e => e.id)))+1;
+        return [...films, {"id": newFilmId, ...film}];
       });
   }
 

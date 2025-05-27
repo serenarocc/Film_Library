@@ -7,12 +7,6 @@ import { useNavigate, Link } from 'react-router';
 const AddFilmForm = (props) => {
   const navigate = useNavigate();
 
-  /*
-   * Creating a state for each parameter of the film.
-   * There are two possible cases: 
-   * - if we are creating a new film, the form is initialized with the default values.
-   * - if we are editing a film, the form is pre-filled with the previous values.
-   */
   const [title, setTitle] = useState(props.filmToEdit ? props.filmToEdit.title : '');
   const [favorite, setFavorite] = useState(props.filmToEdit ? props.filmToEdit.favorite : false);
   const [watchDate, setWatchDate] = useState((props.filmToEdit && props.filmToEdit.watchDate) ? props.filmToEdit.watchDate.format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD'));
@@ -23,19 +17,17 @@ const AddFilmForm = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // String.trim() method is used for removing leading and ending whitespaces from the title.
     const film = { "title": title.trim(), "favorite": favorite, "rating": rating }
-    if (watchDate)  // adding watchDate only if it is defined
+    if (watchDate) {// adding watchDate only if it is defined
       film.watchDate = dayjs(watchDate);
-
-    // Here some data validation can be inserted, if not yet forced with HTML5 attributes on form controls
+    } 
+      
     if (film.title.length == 0) {
       setErrorMsg('Title length cannot be 0');
     } else if (film.rating < 0 || film.rating > 5) {
       setErrorMsg('Invalid value for Rating');
     } else {
       // Proceed to update the data
-
       if (props.filmToEdit) {
         // Film was edited, not created from scratch
         film.id = props.filmToEdit.id;
