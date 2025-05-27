@@ -5,7 +5,7 @@ import { Outlet, Link, useParams, Navigate } from 'react-router';
 import { NavigationBar } from './NavigationBar';
 import { Filters } from './Filters';
 import { FilmTable } from './FilmList';
-import { FilmForm } from './AddFilmForm';
+import { AddFilmForm } from './AddFilmForm';
 
 
 function NotFoundLayout(props) {
@@ -21,7 +21,7 @@ function NotFoundLayout(props) {
   
   function AddLayout(props) {
     return (
-        <FilmForm addFilm={props.addFilm} />
+        <AddFilmForm addFilm={props.addFilm} />
       );
   }
   
@@ -33,7 +33,7 @@ function NotFoundLayout(props) {
     return(
       <>
       {filmToEdit? 
-        <FilmForm editFilm={props.editFilm} filmToEdit={filmToEdit} />
+        <AddFilmForm editFilm={props.editFilm} filmToEdit={filmToEdit} />
        : <Navigate to={"/add"} />}
       </>
     );
