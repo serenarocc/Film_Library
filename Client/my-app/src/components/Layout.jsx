@@ -1,6 +1,6 @@
 
 import { Row, Col, Button } from 'react-bootstrap';
-import { Outlet, Link, useParams, Navigate } from 'react-router';
+import { Outlet, Link, useParams, Navigate } from 'react-router-dom';
 
 import { NavigationBar } from './NavigationBar';
 import { Filters } from './Filters';

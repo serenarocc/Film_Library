@@ -1,7 +1,7 @@
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { BrowserRouter, Routes, Route, Outlet, Link, useParams, Navigate } from 'react-router';
+import { BrowserRouter, Routes, Route, Outlet, Link, useParams, Navigate } from 'react-router-dom';
 
 import dayjs from 'dayjs'; // Importazione della libreria dayjs per la gestione delle date
 
@@ -26,13 +26,13 @@ function App() {
   //secondo la funz che setta quello stato
   const [filmList, setFilmList] = useState(FILMS); //hook mantiene lo stato - stato iniziale
 
-  const [activeFilter, setActiveFilter] = useState('filter-all');//use state ritorna un valore e una funzione
+  // const [activeFilter, setActiveFilter] = useState('filter-all');//use state ritorna un valore e una funzione
 
-  const [activeAddFilm, setActiveAddFilm] = useState(false);
+  // const [activeAddFilm, setActiveAddFilm] = useState(false);
 
-  const [activeEditFilm, setActiveEditFilm] = useState(false);
+   const [activeEditFilm, setActiveEditFilm] = useState(false);
 
-  const [filmToEdit, setFilmToEdit] = useState(null);//cosi sai quale film devi modificare
+  // const [filmToEdit, setFilmToEdit] = useState(null);//cosi sai quale film devi modificare
 
   // Definizione dei filtri disponibili, con etichetta, id e funzione per filtrare
   //mappa json
@@ -109,74 +109,7 @@ function App() {
         </Route>
       </Routes>
     </Container>
-); return (
-    <Container fluid>
-
-        <Row>
-          <Col>
-              <NavigationBar/>   {/* Barra di navigazione in alto blu*/}
-          </Col>
-        </Row>
-
-        <Row>
-
-          <Col xs={3}> 
-                {/* Colonna dei filtri */}
-                <Filters items={filterArray} selected={activeFilter} onSelect={setActiveFilter} />
-               
-          </Col>
-
-
-          {/* Colonna principale con lista dei film */}
-          <Col xs={9}> 
-
-              <div className="d-flex flex-row justify-content-between">
-                  {/* Titolo dinamico con il nome del filtro attivo */}
-                  <h1 className="my-2">Filter: <span>{filters[activeFilter].label}</span></h1>
-                  {/* Bottone per aggiungere un film */}
-                   {!activeAddFilm && !activeEditFilm && (
-                    <Button variant="primary" className="my-2"
-                      onClick={() => {
-                        setActiveAddFilm(true);
-                        setFilmToEdit(null); // assicurati che il form non sia precompilato
-                      }}>
-                      &#43;
-                    </Button>
-                  )}
-              </div>
-              
-               {/* Tabella dei film filtrati in base al filtro attivo */}
-              <FilmTable
-                activeFilter={filters[activeFilter].label}
-                films={filmList.filter(filters[activeFilter].filterFunction)}
-                delete={deleteFilm}
-                editFilm={editFilm}
-                setFilmToEdit={setFilmToEdit}
-                setActiveEditFilm={setActiveEditFilm}
-              />
-
-               <div>
-               {activeAddFilm && (<AddFilmForm
-                addFilm = {addFilm}/>)}
-               </div> 
-
-               {activeEditFilm && (
-                  <AddFilmForm
-                    filmToEdit={filmToEdit}
-                    editFilm={editFilm}
-                  />
-                )}
-
-
-           </Col>
-
-        </Row>
-
-
-    </Container>
-      
-     
-  );
+  ); 
 }
 
 export default App;
