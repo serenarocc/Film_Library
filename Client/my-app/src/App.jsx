@@ -1,6 +1,7 @@
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { BrowserRouter, Routes, Route, Outlet, Link, useParams, Navigate } from 'react-router';
 
 import dayjs from 'dayjs'; // Importazione della libreria dayjs per la gestione delle date
 
@@ -14,6 +15,8 @@ import { NavigationBar } from './components/NavigationBar.jsx' // . è come sono
 import { Filters } from './components/Filters.jsx'
 import { FilmTable } from './components/FilmList.jsx';
 import {AddFilmForm} from './components/AddFilmForm.jsx';
+
+import { GenericLayout, NotFoundLayout, TableLayout, AddLayout, EditLayout } from './components/Layout';
 
 
 function App() {
@@ -93,6 +96,20 @@ function App() {
 
   // Render dell’interfaccia utente
   return (
+    <Container fluid>
+      <Routes>
+        <Route path="/" element={<GenericLayout filterArray={filterArray} />} >
+          <Route index element={<TableLayout 
+               filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} />
+          <Route path="add" element={<AddLayout addFilm={addFilm} />} />
+          <Route path="edit/:filmId" element={<EditLayout films={filmList} editFilm={editFilm} />} />
+          <Route path="filter/:filterId" element={<TableLayout 
+               filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} />
+          <Route path="*" element={<NotFoundLayout />} />
+        </Route>
+      </Routes>
+    </Container>
+); return (
     <Container fluid>
 
         <Row>
