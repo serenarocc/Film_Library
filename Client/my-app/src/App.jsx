@@ -67,13 +67,18 @@ function App() {
       <Container fluid>
         <Routes>
           <Route path="/" element={<GenericLayout filterArray={filterArray} />} >
-            <Route index element={<TableLayout 
-                 filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} />
-            <Route path="add" element={<AddLayout addFilm={addFilm} />} />
+            <Route index element={ 
+           // outlet al path index(homepage) è il table layout
+        
+              <TableLayout 
+                 filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} /> //tutte props che li passo
+            
+            <Route path="add" element={<AddLayout addFilm={addFilm} />} /> //{addFilm} è la props/parametro ne posso specificare di più
             <Route path="edit/:filmId" element={<EditLayout films={filmList} editFilm={editFilm} />} />
             <Route path="filter/:filterId" element={<TableLayout 
                  filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} />
             <Route path="*" element={<NotFoundLayout />} />
+            //* tutti gli altri path non definiti
           </Route>
         </Routes>
       </Container>
