@@ -10,32 +10,12 @@ import { Container, Row, Col, Button} from 'react-bootstrap'; // Importazione de
 
 import FILMS from './films'; // Importazione della lista dei film
 
-// Importazione dei componenti personalizzati
-// import { NavigationBar } from './components/NavigationBar.jsx' // . è come sono in questa cartella
-// import { Filters } from './components/Filters.jsx'
-// import { FilmTable } from './components/FilmList.jsx';
-// import {AddFilmForm} from './components/AddFilmForm.jsx';
-
 import { GenericLayout, NotFoundLayout, TableLayout, AddLayout, EditLayout } from './components/Layout';
-
 
 function App() {
     
-  //const activeFilter = 'filter-all';// Filtro attivo
-  // primo variabile che matiene lo stato attuale
-  //secondo la funz che setta quello stato
   const [filmList, setFilmList] = useState(FILMS); //hook mantiene lo stato - stato iniziale
 
-  // const [activeFilter, setActiveFilter] = useState('filter-all');//use state ritorna un valore e una funzione
-
-  // const [activeAddFilm, setActiveAddFilm] = useState(false);
-
-  //  const [activeEditFilm, setActiveEditFilm] = useState(false);
-
-  // const [filmToEdit, setFilmToEdit] = useState(null);//cosi sai quale film devi modificare
-
-  // Definizione dei filtri disponibili, con etichetta, id e funzione per filtrare
-  //mappa json
   const filters = {
     //key                //value
     'filter-all': { label: 'All', id: 'filter-all', filterFunction: () => true }, //applica funz che ritorna sempre true
@@ -74,13 +54,6 @@ function App() {
     setFilmList(filmList => filmList.filter (e => e.id !==filmId)); //resti
   }
 
-  // function addFilm (film){
-  //   setFilmList(filmList => [...filmList,film]);
-  //   console.log(filmList);
-  //  // setActiveAddFilm(false);
-  //  Navigate('/');
-  // }
-
   function addFilm(film) {
     setFilmList( (films) => {
       // In the complete application, the newFilmId value should come from the backend server.
@@ -94,14 +67,11 @@ function App() {
   function editFilm(film) {
     setFilmList( (films) => films.map( e=> {
       if (e.id === film.id){
-        // setActiveEditFilm(false);
         return Object.assign({}, film);
       }
       else{
-        // setActiveEditFilm(false);
         return e;
       }
-        
     }))
   }
 
