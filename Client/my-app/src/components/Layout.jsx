@@ -1,6 +1,6 @@
 
 import { Row, Col, Button } from 'react-bootstrap';
-import { Outlet, Link, useParams, Navigate } from 'react-router-dom';
+import { Outlet, Link, useParams, Navigate } from 'react-router';
 
 import { NavigationBar } from './NavigationBar';
 import { Filters } from './Filters';
@@ -10,23 +10,22 @@ import { AddFilmForm } from './AddFilmForm';
 
 function NotFoundLayout(props) {
     return (
-        <>
-          <h2>This route is not valid!</h2>
-          <Link to="/">
-            <Button variant="primary">Go back to the main page!</Button>
-          </Link>
-        </>
-      );
+      <>
+        <h2>This route is not valid!</h2>
+        <Link to="/">
+          <Button variant="primary">Go back to the main page!</Button>
+        </Link>
+      </>
+    );
   }
   
   function AddLayout(props) {
     return (
-        <AddFilmForm addFilm={props.addFilm} />
-      );
+      <AddFilmForm addFilm={props.addFilm} />
+    );
   }
   
   function EditLayout(props) {
-   
     const { filmId } = useParams();
     const filmToEdit = props.films && props.films.find( f => f.id === parseInt(filmId) );
     
@@ -44,7 +43,7 @@ function NotFoundLayout(props) {
     const { filterId } = useParams();
     const filterName = props.filters[filterId] ?  props.filters[filterId].label : 'All';
   
-    // When an invalid filter is set, all the films are displayed. ?????
+    // When an invalid filter is set, all the films are displayed.
     const filteredFilms = (filterId in props.filters) ? props.filmList.filter(props.filters[filterId].filterFunction) : props.filmList;
       
     return (
@@ -59,13 +58,12 @@ function NotFoundLayout(props) {
           films={filteredFilms} delete={props.deleteFilm} editFilm={props.editFilm} />
       </>
     );
-
   }
   
   function GenericLayout(props) {
   
     return (
-        <>
+      <>
         <Row>
           <Col>
             <NavigationBar />
@@ -74,7 +72,7 @@ function NotFoundLayout(props) {
   
         <Row>
           <Col xs={3}>
-            <Filters items={props.filterArray} />
+            <Filters filterArray={props.filterArray} />
           </Col>
   
           <Col xs={9}>

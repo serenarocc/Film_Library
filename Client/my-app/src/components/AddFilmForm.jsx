@@ -1,108 +1,87 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import {Alert} from 'react-bootstrap';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
 import dayjs from 'dayjs';
 
-function AddFilmForm({ addFilm, editFilm, filmToEdit }) {
-  const [validated, setValidated] = useState(false);
+import {useState} from 'react';
+import {Form, Button, Alert} from 'react-bootstrap';
+import { useNavigate, Link } from 'react-router';
 
-  const isEdit = !!filmToEdit;
+const AddFilmForm = (props) => {
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    title: filmToEdit? filmToEdit.title : "",
-    favorite: filmToEdit? filmToEdit.favorite : false,
-    rating: filmToEdit? filmToEdit.rating : 0,
-    watchDate: filmToEdit? filmToEdit.watchDate?.format("YYYY-MM-DD") : ""
-  });
+  /*
+   * Creating a state for each parameter of the film.
+   * There are two possible cases: 
+   * - if we are creating a new film, the form is initialized with the default values.
+   * - if we are editing a film, the form is pre-filled with the previous values.
+   */
+  const [title, setTitle] = useState(props.filmToEdit ? props.filmToEdit.title : '');
+  const [favorite, setFavorite] = useState(props.filmToEdit ? props.filmToEdit.favorite : false);
+  const [watchDate, setWatchDate] = useState((props.filmToEdit && props.filmToEdit.watchDate) ? props.filmToEdit.watchDate.format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD'));
+  const [rating, setRating] = useState((props.filmToEdit && props.filmToEdit.rating) ? props.filmToEdit.rating : 0);
 
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const newFilm = {
-      id: isEdit ? filmToEdit.id : Math.floor(Math.random() * 10000),
-      title: formData.title,
-      favorite: formData.favorite,
-      watchDate: formData.watchDate ? dayjs(formData.watchDate) : undefined,
-      rating: parseInt(formData.rating)
-    };
-   
-     // Here some data validation can be inserted, if not yet forced with HTML5 attributes on form controls
-     if (newFilm.title.length == 0) {
-      setErrorMsg('Title length cannot be 0');
-    } else if (newFilm.rating < 0 || newFilm.rating > 5) {
-      setErrorMsg('Invalid value for Rating');
-    }
-    isEdit ? editFilm(newFilm) : addFilm(newFilm);
-    setValidated(true);
-  };
 
+    // String.trim() method is used for removing leading and ending whitespaces from the title.
+    const film = { "title": title.trim(), "favorite": favorite, "rating": rating }
+    if (watchDate)  // adding watchDate only if it is defined
+      film.watchDate = dayjs(watchDate);
+
+    // Here some data validation can be inserted, if not yet forced with HTML5 attributes on form controls
+    if (film.title.length == 0) {
+      setErrorMsg('Title length cannot be 0');
+    } else if (film.rating < 0 || film.rating > 5) {
+      setErrorMsg('Invalid value for Rating');
+    } else {
+      // Proceed to update the data
+
+      if (props.filmToEdit) {
+        // Film was edited, not created from scratch
+        film.id = props.filmToEdit.id;
+        props.editFilm(film);
+        navigate('/');
+      } else {
+        props.addFilm(film);
+        navigate('/');
+      }
+    }
+  }
 
   return (
     <>
-     {errorMsg? <Alert variant='danger' onClose={()=>setErrorMsg('')} dismissible>{errorMsg}</Alert> : false }
+    {errorMsg? <Alert variant='danger' onClose={()=>setErrorMsg('')} dismissible>{errorMsg}</Alert> : false }
     <Form onSubmit={handleSubmit}>
-      <Row className="mb-3">
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
-          <Form.Label>Title</Form.Label>
-           <Form.Control
-              required
-              type="text"
-              name="title"
-              placeholder="Film title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            />
-        </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Title</Form.Label>
+        {/* required={true} forces the user to insert some characters, but if they are all spaces this is not checked */}
+        <Form.Control type="text" required={true} value={title} onChange={event => setTitle(event.target.value)}/>
+      </Form.Group>
 
-        <Form.Group as={Col} md="6" controlId="validationCustom02">
-          <Form.Label>Favorite</Form.Label>
-          <Form.Check
-            type="checkbox"
-            name="favorite"
-            label="Mark as Favorite"
-            checked={formData.favorite}
-            onChange={(e) => setFormData({ ...formData, favorite: e.target.checked })}
-          />
-        </Form.Group>
-      </Row>
+      <Form.Group className="mb-3">
+        <Form.Check type="checkbox" label="Favorite" name="favorite" checked={favorite} onChange={(event) => setFavorite(event.target.checked)} />
+      </Form.Group>
 
-      <Row className="mb-3">
-        <Form.Group as={Col} md="6" controlId="validationCustomUsername">
-          <Form.Label>Watch Date</Form.Label>
-          <Form.Control
-            type="date"
-            name="watchdate"
-            value={formData.watchDate}
-            onChange={(e) => setFormData({ ...formData, watchDate: e.target.value })}
-          />
+      <Form.Group className="mb-3">
+        <Form.Label>Watch Date</Form.Label>
+        { /* watchDate is an optional parameter. It have to be properly rendered only if available. */ }
+        <Form.Control type="date" value={watchDate} onChange={event => {event.target.value ? setWatchDate(dayjs(event.target.value).format('YYYY-MM-DD')) : setWatchDate("")}}/>
+      </Form.Group>
 
-        </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>Rating</Form.Label>
+        <Form.Control type="number" min={0} max={5} step={1} value={rating} onChange={event => setRating(parseInt(event.target.value))}/>
+      </Form.Group>
 
-        <Form.Group as={Col} md="6" controlId="validationCustom03">
-          <Form.Label>Rating</Form.Label>
-          <Form.Control
-            type="number"
-            name="rating"
-            placeholder="Rating (0-5)"
-            required
-            min={0}
-            max={5}
-            value={formData.rating}
-            onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
-          />
-        </Form.Group>
-      </Row>
-
-      <Button type="submit">Submit</Button>
+      <Button className="mb-3" variant="primary" type="submit">Save</Button>
+      &nbsp;
+      <Link to={"/"} >
+        <Button className="mb-3" variant="danger">Cancel</Button>
+      </Link>
     </Form>
     </>
-   
-  );
+  )
+
 }
 
 export { AddFilmForm };
