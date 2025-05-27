@@ -14,7 +14,7 @@ const AddFilmForm = (props) => {
 
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event) => { //è una call back automatica triggerata dal form
     event.preventDefault();
 
     const film = { "title": title.trim(), "favorite": favorite, "rating": rating }
@@ -32,7 +32,7 @@ const AddFilmForm = (props) => {
         // Film was edited, not created from scratch
         film.id = props.filmToEdit.id;
         props.editFilm(film);
-        navigate('/');
+        navigate('/');//rindirizza alla home
       } else {
         props.addFilm(film);
         navigate('/');
@@ -41,8 +41,8 @@ const AddFilmForm = (props) => {
   }
 
   return (
-    <>
-    {errorMsg? <Alert variant='danger' onClose={()=>setErrorMsg('')} dismissible>{errorMsg}</Alert> : false }
+    <> //()=>setErrorMsg('') setta di nuovo la variabile a vuoto dopo la chiusura è come un reset
+    {errorMsg? <Alert variant='danger' onClose={()=>setErrorMsg('')} dismissible>{errorMsg}</Alert> : false } //false non renderizza niente
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3">
         <Form.Label>Title</Form.Label>

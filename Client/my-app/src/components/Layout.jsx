@@ -19,7 +19,7 @@ function NotFoundLayout(props) {
     );
   }
   
-  function AddLayout(props) {
+  function AddLayout(props) { //vd props cmmenti app.jsx
     return (
       <AddFilmForm addFilm={props.addFilm} />
     );
@@ -40,12 +40,12 @@ function NotFoundLayout(props) {
   
   function TableLayout(props) {
   
-    const { filterId } = useParams();
+    const { filterId } = useParams(); //filterId r 78 app.jsx arrriva da table layoy è il parametro del path
     const filterName = props.filters[filterId] ?  props.filters[filterId].label : 'All';
   
     // When an invalid filter is set, all the films are displayed.
     const filteredFilms = (filterId in props.filters) ? props.filmList.filter(props.filters[filterId].filterFunction) : props.filmList;
-      
+      //funz che ritorna quel codice html
     return (
       <>
         <div className="d-flex flex-row justify-content-between">
@@ -55,7 +55,7 @@ function NotFoundLayout(props) {
           </Link>
         </div>
         <FilmTable 
-          films={filteredFilms} delete={props.deleteFilm} editFilm={props.editFilm} />
+          films={filteredFilms} delete={props.deleteFilm} editFilm={props.editFilm} />//gli permetti di passare in cascata le props che hai ora
       </>
     );
   }
@@ -76,8 +76,7 @@ function NotFoundLayout(props) {
           </Col>
   
           <Col xs={9}>
-            <Outlet />
-  
+            <Outlet /> //viene da app.jsx e' un placeholder
           </Col>
         </Row>
       </>

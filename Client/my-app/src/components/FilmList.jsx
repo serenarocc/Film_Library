@@ -69,7 +69,7 @@ function Rating(props) {
   // Create an array with props.maxStars elements, then run map to create the JSX elements for the array 
   return [...Array(props.maxStars)].map((el, index) =>
     <i key={index} className={(index < props.rating) ? "bi bi-star-fill" : "bi bi-star"}
-      onClick={() => props.editRating(index+1)} />
+      onClick={() => props.editRating(index+1)} /> //sto cliccando la 4 stella che ha index 3 quindi rating + 1
   )
 }
 
