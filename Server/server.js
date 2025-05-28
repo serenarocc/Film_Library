@@ -15,7 +15,7 @@ const app = express(); //oggetto server
 app.use(morgan('dev'));
 app.use(express.json()); // abilita parsing JSON
 app.use(cors()); 
-const PORT = 3000;
+const PORT = 3001;
 
 /*** Utility Functions ***/
 
