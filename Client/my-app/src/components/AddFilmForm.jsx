@@ -2,10 +2,11 @@ import dayjs from 'dayjs';
 
 import {useState} from 'react';
 import {Form, Button, Alert} from 'react-bootstrap';
-import { useNavigate, Link } from 'react-router';
+import { useNavigate, useLocation, Link } from 'react-router';
 
 const AddFilmForm = (props) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [title, setTitle] = useState(props.filmToEdit ? props.filmToEdit.title : '');
   const [favorite, setFavorite] = useState(props.filmToEdit ? props.filmToEdit.favorite : false);
@@ -33,10 +34,18 @@ const AddFilmForm = (props) => {
         // Film was edited, not created from scratch
         film.id = props.filmToEdit.id;
         props.editFilm(film);
-        navigate('/');//rindirizza alla home
+        //navigate('/');//rindirizza alla home
+         // The received state is to tell to which page (i.e., filter) the application should go back
+         const prevUrl = (location.state && location.state.previousUrl) || '/';
+         // The state is to tell not to reload from server otherwise the result of edit cannot be seen, later it will be removed
+         navigate(`${prevUrl}`, {state: {reloadFromServer: false}});  
       } else {
         props.addFilm(film);
-        navigate('/');
+        //navigate('/');
+        // The received state is to tell to which page (i.e., filter) the application should go back
+        const prevUrl = (location.state && location.state.previousUrl) || '/';
+        // The state is to tell not to reload from server otherwise the result of add cannot be seen, later it will be removed
+        navigate(`${prevUrl}`, {state: {reloadFromServer: false}});
       }
     }
   }
