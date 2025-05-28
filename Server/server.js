@@ -1,6 +1,8 @@
 'use strict';
 //import package express - slide 4.02 num 16
 const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
 const film = require('./film');
 const filmLibrary = require('./filmLibrary');
 const library = new filmLibrary();
@@ -10,7 +12,9 @@ const { check, validationResult, body, } = require('express-validator'); // vali
 //avviazione server 
 // //create application
 const app = express(); //oggetto server
+app.use(morgan('dev'));
 app.use(express.json()); // abilita parsing JSON
+app.use(cors()); 
 const PORT = 3000;
 
 /*** Utility Functions ***/
