@@ -3,6 +3,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+
 const film = require('./film');
 const filmLibrary = require('./filmLibrary');
 const library = new filmLibrary();
@@ -12,9 +13,10 @@ const { check, validationResult, body, } = require('express-validator'); // vali
 //avviazione server 
 // //create application
 const app = express(); //oggetto server
+app.use(cors()); 
 app.use(morgan('dev'));
 app.use(express.json()); // abilita parsing JSON
-app.use(cors()); 
+
 const PORT = 3001;
 
 /*** Utility Functions ***/
