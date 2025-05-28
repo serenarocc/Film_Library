@@ -8,13 +8,14 @@ import { React, useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { BrowserRouter, Routes, Route, Outlet, Link, useParams, Navigate } from 'react-router';
 
-import FILMS from './films';
+// import FILMS from './films';
+import API from './API.js';
 
 import { GenericLayout, NotFoundLayout, TableLayout, AddLayout, EditLayout } from './components/Layout';
 
 function App() {
 
-  const [filmList, setFilmList] = useState(FILMS);
+  const [filmList, setFilmList] = useState([]);
  
 //ogni filtro si identifica da un nome univoco e ha i segueti campo: label, url per il router, e una filterfanction che passa i film già filtrati alla FilmTable
   const filters = {
