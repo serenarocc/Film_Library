@@ -92,7 +92,7 @@ function App() {
                {/* addFilm tra graffe è la props/parametro. posso specificare più props*/}
               <Route path="add" element={<AddLayout addFilm={addFilm} />} /> 
               <Route path="edit/:filmId" element={<EditLayout films={filmList} editFilm={editFilm} />} />  {/* sto passando due props*/}
-              <Route path="filter/:filterId" element={<TableLayout filmList={filmList} setFilmList={setFilmlist} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} />
+              <Route path="filter/:filterId" element={<TableLayout filmList={filmList} setFilmList={setFilmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} />
               <Route path="*" element={<NotFoundLayout />} /> {/* asterisco * indica tutti gli altri path non definiti*/}
           </Route>
         </Routes>
