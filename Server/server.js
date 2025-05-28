@@ -12,12 +12,18 @@ const { check, validationResult, body, } = require('express-validator'); // vali
 
 //avviazione server 
 // //create application
-const app = express(); //oggetto server
-app.use(cors()); 
+const app = express();
+const PORT = 3001; // ✅ il backend deve essere su una porta diversa dal frontend
+
+// ✅ Middleware CORS configurato correttamente
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 app.use(morgan('dev'));
 app.use(express.json()); // abilita parsing JSON
 
-const PORT = 3001;
+
 
 /*** Utility Functions ***/
 
