@@ -1,6 +1,6 @@
 import 'dayjs';
 import { Table, Form, Button } from 'react-bootstrap';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 function FilmTable(props) {
   const { films } = props;
@@ -24,6 +24,9 @@ function FilmTable(props) {
 }
 
 function FilmRow(props) {
+  const location = useLocation();
+  const currentUrl = location.pathname;
+  //console.log("DEBUG: currentUrl in FilmRow: "+currentUrl);
 
   const formatWatchDate = (dayJsDate, format) => {
     return dayJsDate ? dayJsDate.format(format) : '';
@@ -54,7 +57,7 @@ function FilmRow(props) {
           onClick={() => { props.delete(props.filmData.id) }} >
           <i className='bi bi-trash'></i>
         </Button>
-        <Link to={`/edit/${props.filmData.id}`}>
+        <Link to={`/edit/${props.filmData.id}`} state={{previousUrl: currentUrl}} >
           <Button className="mx-2" variant='warning'>
             <i className='bi bi-pencil'></i>
           </Button>
