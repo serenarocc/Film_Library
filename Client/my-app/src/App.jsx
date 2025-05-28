@@ -15,13 +15,8 @@ import { GenericLayout, NotFoundLayout, TableLayout, AddLayout, EditLayout } fro
 function App() {
 
   const [filmList, setFilmList] = useState(FILMS);
-  /**
-   * Defining a structure for Filters
-   * Each filter is identified by a unique name and is composed by the following fields:
-   * - A label to be shown in the GUI
-   * - A URL for the router
-   * - A filter function applied before passing the films to the FilmTable component
-   */
+ 
+//ogni filtro si identifica da un nome univoco e ha i segueti campo: label, url per il router, e una filterfanction che passa i film già filtrati alla FilmTable
   const filters = {
     'all': { label: 'All', url: '/', filterFunction: () => true },
     'favorite': { label: 'Favorites', url: '/filter/favorite', filterFunction: film => film.favorite },
@@ -29,6 +24,7 @@ function App() {
     'lastmonth': { label: 'Seen Last Month', url: '/filter/lastmonth', filterFunction: film => isSeenLastMonth(film) },
     'unseen': { label: 'Unseen', url: '/filter/unseen', filterFunction: film => film.watchDate ? false : true }
   };
+  //console.log('filters: ',filters);
 
   const isSeenLastMonth = (film) => {
     if ('watchDate' in film) {  // Accessing watchDate only if defined
@@ -38,10 +34,33 @@ function App() {
     }
   }
 
+  //converte oggetto in array ovvero una lista di coppie chiave-valore
   const filtersToArray = Object.entries(filters);
+  //console.log('filtersToArray: ',filtersToArray);
+   /*filtersToArray ritorna:
+   * Array(5) [ (2) […], (2) […], (2) […], (2) […], (2) […] ]
+      0: Array [ "all", {…} 
+          0: "all"
+          1: Object { label: "All", url: "/", filterFunction: filterFunction()
+          }
+      1: Array [ "favorite", {…} ]
+      2: Array [ "best", {…} ]
+      3: Array [ "lastmonth", {…} ]
+      4: Array [ "unseen", {…} ]
+   */
 
   const filterArray = filtersToArray.map(([filterName, obj ]) =>
      ({ filterName: filterName, ...obj }));
+
+  //console.log('filterArray: ',filterArray);
+  /*filterArray ritorna:
+   * Array(5) [ {…}, {…}, {…}, {…}, {…} ]
+      0: Object { filterName: "all", label: "All", url: "/", … }
+      1: Object { filterName: "favorite", label: "Favorites", url: "/filter/favorite", … }
+      2: Object { filterName: "best", label: "Best Rated", url: "/filter/best", … }
+      3: Object { filterName: "lastmonth", label: "Seen Last Month", url: "/filter/lastmonth", … }
+      4: Object { filterName: "unseen", label: "Unseen", url: "/filter/unseen", … }
+   */
 
   function deleteFilm(filmId) {
     setFilmList(filmList => filmList.filter(e => e.id!==filmId));
@@ -67,22 +86,18 @@ function App() {
       <Container fluid>
         <Routes>
           <Route path="/" element={<GenericLayout filterArray={filterArray} />} >
-            <Route index element={ 
-           // outlet al path index(homepage) è il table layout
-        
-              <TableLayout 
-                 filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} /> //tutte props che li passo
-            
-            <Route path="add" element={<AddLayout addFilm={addFilm} />} /> //{addFilm} è la props/parametro ne posso specificare di più
-            <Route path="edit/:filmId" element={<EditLayout films={filmList} editFilm={editFilm} />} />
-            <Route path="filter/:filterId" element={<TableLayout 
-                 filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} />
-            <Route path="*" element={<NotFoundLayout />} />
-            //* tutti gli altri path non definiti
+            {/* outlet al path index(homepage) è il table layout*/}
+            <Route index element={ <TableLayout filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} /> {/* tutte props che gli passo*/} 
+               {/* addFilm tra graffe è la props/parametro. posso specificare più props*/}
+              <Route path="add" element={<AddLayout addFilm={addFilm} />} /> 
+              <Route path="edit/:filmId" element={<EditLayout films={filmList} editFilm={editFilm} />} />  {/* sto passando due props*/}
+              <Route path="filter/:filterId" element={<TableLayout filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} />
+              <Route path="*" element={<NotFoundLayout />} /> {/* asterisco * indica tutti gli altri path non definiti*/}
           </Route>
         </Routes>
       </Container>
   );
+
 }
 
 export default App;

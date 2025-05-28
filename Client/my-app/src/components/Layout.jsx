@@ -19,7 +19,7 @@ function NotFoundLayout(props) {
     );
   }
   
-  function AddLayout(props) { //vd props cmmenti app.jsx
+  function AddLayout(props) { //vedi props che passi da app.jsx riga 92
     return (
       <AddFilmForm addFilm={props.addFilm} />
     );
@@ -40,12 +40,12 @@ function NotFoundLayout(props) {
   
   function TableLayout(props) {
   
-    const { filterId } = useParams(); //filterId r 78 app.jsx arrriva da table layoy è il parametro del path
+    const { filterId } = useParams(); //filterId riga 92 app.jsx arrriva da table layout, è il parametro del path
     const filterName = props.filters[filterId] ?  props.filters[filterId].label : 'All';
   
     // When an invalid filter is set, all the films are displayed.
     const filteredFilms = (filterId in props.filters) ? props.filmList.filter(props.filters[filterId].filterFunction) : props.filmList;
-      //funz che ritorna quel codice html
+      //TableLayout è quella funzione che ritorna quel codice html
     return (
       <>
         <div className="d-flex flex-row justify-content-between">
@@ -54,8 +54,8 @@ function NotFoundLayout(props) {
             <Button variant="primary" className="my-2">&#43;</Button>
           </Link>
         </div>
-        <FilmTable 
-          films={filteredFilms} delete={props.deleteFilm} editFilm={props.editFilm} />//gli permetti di passare in cascata le props che hai ora
+        {/* permetti di passare in cascata le props che hai ora in TableLayout (ovvero films={filteredFilms} delete={props.deleteFilm} editFilm={props.editFilm}) a filmTable*/}
+        <FilmTable films={filteredFilms} delete={props.deleteFilm} editFilm={props.editFilm} />
       </>
     );
   }
@@ -75,8 +75,8 @@ function NotFoundLayout(props) {
             <Filters filterArray={props.filterArray} />
           </Col>
   
-          <Col xs={9}>
-            <Outlet /> //viene da app.jsx e' un placeholder
+          <Col xs={9}> 
+            <Outlet /> {/* viene da app.jsx e' un placeholder*/}
           </Col>
         </Row>
       </>

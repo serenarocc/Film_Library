@@ -17,8 +17,7 @@ function FilmTable(props) {
         </tr>
       </thead>
       <tbody>
-        {films.map((film) => <FilmRow filmData={film} key={film.id} delete={props.delete}
-           editFilm={props.editFilm} />)}
+        {films.map((film) => <FilmRow filmData={film} key={film.id} delete={props.delete} editFilm={props.editFilm} />)}
       </tbody>
     </Table>
   );
@@ -67,9 +66,10 @@ function FilmRow(props) {
 
 function Rating(props) {
   // Create an array with props.maxStars elements, then run map to create the JSX elements for the array 
+  // se cliko la 4 stella che ha index 3, allora il rating + 1 
   return [...Array(props.maxStars)].map((el, index) =>
     <i key={index} className={(index < props.rating) ? "bi bi-star-fill" : "bi bi-star"}
-      onClick={() => props.editRating(index+1)} /> //sto cliccando la 4 stella che ha index 3 quindi rating + 1
+      onClick={() => props.editRating(index+1)} /> 
   )
 }
 

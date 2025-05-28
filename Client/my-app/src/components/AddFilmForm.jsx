@@ -14,7 +14,8 @@ const AddFilmForm = (props) => {
 
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (event) => { //è una call back automatica triggerata dal form
+//handleSubmit è una call back automatica triggerata dal form
+  const handleSubmit = (event) => { 
     event.preventDefault();
 
     const film = { "title": title.trim(), "favorite": favorite, "rating": rating }
@@ -41,7 +42,8 @@ const AddFilmForm = (props) => {
   }
 
   return (
-    <> //()=>setErrorMsg('') setta di nuovo la variabile a vuoto dopo la chiusura è come un reset
+    <> 
+    {/* ()=>setErrorMsg('') setta di nuovo la variabile a vuoto dopo la chiusura. E'come un reset*/}
     {errorMsg? <Alert variant='danger' onClose={()=>setErrorMsg('')} dismissible>{errorMsg}</Alert> : false } //false non renderizza niente
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3">
