@@ -45,6 +45,7 @@ function NotFoundLayout(props) {
   
     const { filterId } = useParams(); //filterId riga 92 app.jsx arrriva da table layout, è il parametro del path
     const filterName = props.filters[filterId] ?  props.filters[filterId].label : 'All';
+    console.log('filetrId ',filterId);
     const filterQueryId = filterId || '';
 
     // When an invalid filter is set, all the films are displayed.

@@ -38,9 +38,12 @@ function getJson(httpResponsePromise) {
  * The list of films could be filtered in the server-side through the optional parameter: filter.
  */
 const getFilms = async (filter) => {
+  console.log('filter: ', filter);
   const url = filter
     ? SERVER_URL + 'films/filter/' + filter   
     : SERVER_URL + 'films';
+
+    console.log('url: ', url);
 
   return getJson(fetch(url)).then(json => {
     return json.map((film) => {
