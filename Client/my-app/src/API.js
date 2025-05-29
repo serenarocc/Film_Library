@@ -39,12 +39,12 @@ function getJson(httpResponsePromise) {
  */
 const getFilms = async (filter) => {
   // film.watchDate could be null or a string in the format YYYY-MM-DD
-  return getJson(
+  return getJson( //getjson legge quel json
     filter 
-      ? fetch(SERVER_URL + 'films?filter=' + filter)
+      ? fetch(SERVER_URL + 'films/filter/' + filter)
       : fetch(SERVER_URL + 'films')
-  ).then( json => {
-    return json.map((film) => {
+  ).then( json => {//in json stanno tutti i film 
+    return json.map((film) => {//per ogni film crea oggetto film. i json che hai ricevuto lo trasformi in mappa json
       const clientFilm = {
         id: film.id,
         title: film.title,
@@ -54,7 +54,7 @@ const getFilms = async (filter) => {
       }
       if (film.watchDate != null)
         clientFilm.watchDate = dayjs(film.watchDate);
-      return clientFilm;
+      return clientFilm; //risultato film della lambda
     })
   })
 }

@@ -247,12 +247,12 @@ app.delete('/api/films/:id',
 //API Req 7: retive films in based a different filter
 app.get('/api/films/filter/:paramfilter', (req, res) => {
   let films;
-  
-  if(req.params.paramfilter == 'all'){
+  console.log('req:  ',req); //sto stampando la richiesta lato client
+  if(req.params.paramfilter == 'All'){
     films = library.getAll();
   }else if(req.params.paramfilter == 'best'){
     films = library.getAllBest();
-  }else if(req.params.paramfilter == 'favorite'){
+  }else if(req.params.paramfilter == 'Favorites'){
     films = library.getAllFavorite();
   }else if(req.params.paramfilter == 'lastmonth'){
     films = library.getAllLastMonth();

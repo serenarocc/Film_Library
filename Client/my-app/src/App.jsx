@@ -87,7 +87,7 @@ function App() {
         <Routes>
           <Route path="/" element={<GenericLayout filterArray={filterArray} />} >
             {/* outlet al path index(homepage) è il table layout*/}
-            <Route index element={ <TableLayout filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} />} /> {/* tutte props che gli passo*/} 
+            <Route index element={ <TableLayout filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} setFilmList={setFilmList} />} /> {/* tutte props che gli passo*/} 
                {/* addFilm tra graffe è la props/parametro. posso specificare più props*/}
               <Route path="add" element={<AddLayout addFilm={addFilm} />} /> 
               <Route path="edit/:filmId" element={<EditLayout films={filmList} editFilm={editFilm} />} />  {/* sto passando due props*/}

@@ -42,12 +42,13 @@ function NotFoundLayout(props) {
   }
   
   function TableLayout(props) {
-  
+  //useParams prende id dall'url
     const { filterId } = useParams(); //filterId riga 92 app.jsx arrriva da table layout, è il parametro del path
     console.log('filetrId: ',filterId);
     const filterName = props.filters[filterId] ?  props.filters[filterId].label : 'All';
     console.log('filterName: ',filterName);
-    const filterQueryId = filterId || '';
+    const filterQueryId = filterId || ''; 
+    
     console.log('filterQueryId : ',filterQueryId );
 
     // When an invalid filter is set, all the films are displayed.
@@ -55,9 +56,9 @@ function NotFoundLayout(props) {
 
 // This is only for convenience, to avoid reloading from server when coming from /add or /edit
     // It will be removed when the add and edit operations communicate with the server
-    const location = useLocation();
+    const location = useLocation();//hook di react route da l'ogetto in cui sei adesso
     console.log('location : ',location );
-    const currentUrl = location.pathname;
+    const currentUrl = location.pathname;//es filter/Favorites
     console.log('currentUrl : ',currentUrl );
     let reloadFromServer = true;
     if (location.state)
@@ -68,9 +69,9 @@ function NotFoundLayout(props) {
     useEffect(() => {
       if (reloadFromServer) {
         setWaiting(true);
-        API.getFilms(filterQueryId)
+        API.getFilms(filterName)
         .then(films => {
-          props.setFilmList(films);
+          props.setFilmList(films);//cambia lo stato di react fa di nuovo la renderizzazione e  poi li vedo
           setWaiting(false);
         })
         .catch(e => { console.log(e); } ); 
