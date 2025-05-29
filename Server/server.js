@@ -15,13 +15,10 @@ const { check, validationResult, body } = require('express-validator'); // valid
 const app = express();
 const PORT = 3001; // ✅ il backend deve essere su una porta diversa dal frontend
 
-// ✅ Middleware CORS configurato correttamente
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
 app.use(morgan('dev'));
-app.use(express.json()); // abilita parsing JSON
+app.use(express.json());// abilita parsing JSON
+
+app.use(cors());  // Be careful: this enables ALL origins!
 
 
 
