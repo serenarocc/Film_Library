@@ -17,7 +17,7 @@ const PORT = 3001; // ✅ il backend deve essere su una porta diversa dal fronte
 
 // ✅ Middleware CORS configurato correttamente
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:5173',
   credentials: true
 }));
 app.use(morgan('dev'));
