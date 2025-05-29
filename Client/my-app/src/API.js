@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const SERVER_URL = 'http://localhost:3001/api/';
+const SERVER_URL = 'http://localhost:3000/api/';
 
 
 /**
