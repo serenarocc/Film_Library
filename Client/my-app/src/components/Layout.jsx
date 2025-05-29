@@ -44,9 +44,11 @@ function NotFoundLayout(props) {
   function TableLayout(props) {
   
     const { filterId } = useParams(); //filterId riga 92 app.jsx arrriva da table layout, è il parametro del path
+    console.log('filetrId: ',filterId);
     const filterName = props.filters[filterId] ?  props.filters[filterId].label : 'All';
-    console.log('filetrId ',filterId);
+    console.log('filterName: ',filterName);
     const filterQueryId = filterId || '';
+    console.log('filterQueryId : ',filterQueryId );
 
     // When an invalid filter is set, all the films are displayed.
    // const filteredFilms = (filterId in props.filters) ? props.filmList.filter(props.filters[filterId].filterFunction) : props.filmList;
@@ -54,7 +56,9 @@ function NotFoundLayout(props) {
 // This is only for convenience, to avoid reloading from server when coming from /add or /edit
     // It will be removed when the add and edit operations communicate with the server
     const location = useLocation();
+    console.log('location : ',location );
     const currentUrl = location.pathname;
+    console.log('currentUrl : ',currentUrl );
     let reloadFromServer = true;
     if (location.state)
       reloadFromServer = location.state.reloadFromServer;
