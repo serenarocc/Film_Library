@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const SERVER_URL = 'http://localhost:3000/api/';
+const SERVER_URL = 'http://localhost:3001/api/';
 
 
 /**
@@ -38,14 +38,12 @@ function getJson(httpResponsePromise) {
  * The list of films could be filtered in the server-side through the optional parameter: filter.
  */
 const getFilms = async (filter) => {
-  console.log('filter: ', filter);
-  const url = filter
-    ? SERVER_URL + 'films/filter/' + filter   
-    : SERVER_URL + 'films';
-
-    console.log('url: ', url);
-
-  return getJson(fetch(url)).then(json => {
+  // film.watchDate could be null or a string in the format YYYY-MM-DD
+  return getJson(
+    filter 
+      ? fetch(SERVER_URL + 'films?filter=' + filter)
+      : fetch(SERVER_URL + 'films')
+  ).then( json => {
     return json.map((film) => {
       const clientFilm = {
         id: film.id,
@@ -53,13 +51,13 @@ const getFilms = async (filter) => {
         favorite: film.favorite,
         rating: film.rating,
         user: film.user
-      };
+      }
       if (film.watchDate != null)
         clientFilm.watchDate = dayjs(film.watchDate);
       return clientFilm;
-    });
-  });
-};
+    })
+  })
+}
 
 
 const API = { getFilms };

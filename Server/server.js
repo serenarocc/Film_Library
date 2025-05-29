@@ -7,7 +7,7 @@ const cors = require('cors');
 const film = require('./film');
 const filmLibrary = require('./filmLibrary');
 const library = new filmLibrary();
-const { check, validationResult, body, } = require('express-validator'); // validation middleware -- importazione del modulo
+const { check, validationResult, body } = require('express-validator'); // validation middleware -- importazione del modulo
 
 
 //avviazione server 

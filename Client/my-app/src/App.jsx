@@ -9,9 +9,8 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import { BrowserRouter, Routes, Route, Outlet, Link, useParams, Navigate } from 'react-router';
 
 // import FILMS from './films';
-import API from './API.js';
-
 import { GenericLayout, NotFoundLayout, TableLayout, AddLayout, EditLayout } from './components/Layout';
+import API from './API.js';
 
 function App() {
 
