@@ -198,7 +198,7 @@ content-type: application/json
 
 # ## API Req 7: retive films in based a different filter
 # # # get non possono avere il body
-GET http://localhost:3001/api/films/filter/lastmonth HTTP/1.1
+GET http://localhost:3001/api/films/filter/Unseen HTTP/1.1
 content-type: application/json
 
 ###

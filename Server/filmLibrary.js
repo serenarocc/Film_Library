@@ -324,13 +324,14 @@ function FilmLibrary() {
   //api 7
   this.getAllUnseen = () => { 
     return new Promise((resolve, reject) => { //watchdate
-      const query = 'SELECT * FROM films WHERE watchdate IS NULL ' ;
+      const query = "SELECT * FROM films WHERE watchdate IS NULL OR watchdate = ''";
       db.all(query, [], (err, rows) => {
         if(err) {
           reject(err);
         }
         else {
           const films = rows.map(record => new Film(record.id, record.title, record.favorite == 1, record.watchdate, record.rating));
+          console.log('unseen films: ', films);
           resolve(films);
         }
       });
