@@ -324,7 +324,7 @@ function FilmLibrary() {
   //api 7
   this.getAllUnseen = () => { 
     return new Promise((resolve, reject) => { //watchdate
-      const query = "SELECT * FROM films WHERE watchdate IS NULL OR watchdate = ''";
+      const query = "SELECT * FROM films WHERE watchdate IS NULL OR watchdate = '' OR watchdate = '[object Object]'";
       db.all(query, [], (err, rows) => {
         if(err) {
           reject(err);
