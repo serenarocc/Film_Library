@@ -128,9 +128,9 @@ function App() {
   return (
       <Container fluid>
         <Routes>
-          <Route path="/" element={<GenericLayout filterArray={filterArray} />} >
+          <Route path="/" element={<GenericLayout filterArray={filterArray} message={message} setMessage={setMessage} />} >
             {/* outlet al path index(homepage) è il table layout*/}
-            <Route index element={ <TableLayout filmList={filmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} setFilmList={setFilmList} handleErrors={handleErrors}/>} /> {/* tutte props che gli passo*/} 
+            <Route index element={ <TableLayout   filmList={filmList} setFilmList={setFilmList} filters={filters} deleteFilm={deleteFilm} editFilm={editFilm} handleErrors={handleErrors} dirty={dirty} setDirty={setDirty}/>} /> {/* tutte props che gli passo*/} 
                {/* addFilm tra graffe è la props/parametro. posso specificare più props*/}
               <Route path="add" element={<AddLayout addFilm={addFilm} />} /> 
               <Route path="edit/:filmId" element={<EditLayout films={filmList} editFilm={editFilm} />} />  {/* sto passando due props*/}
