@@ -60,5 +60,58 @@ const getFilms = async (filter) => {
 }
 
 
-const API = { getFilms };
+/**
+ * This function wants a film object as parameter. If the filmId exists, it updates the film in the server side.
+ */
+function updateFilm(film) {
+  // the date must be transformed into a string for the JSON.stringify method
+  if (film && film.watchDate && (film.watchDate instanceof dayjs))
+      film.watchDate = film.watchDate.format("YYYY-MM-DD");
+  return getJson(
+    fetch(SERVER_URL + "films/" + film.id, { 
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(film)
+    })
+  )
+}
+
+/**
+ * This function adds a new film in the back-end library.
+ */
+function addFilm(film) {
+  // the date must be transformed into a string for the JSON.stringify method
+  console.log('film: ',film);
+  if (film && film.watchDate && (film.watchDate instanceof dayjs)){
+    film.watchDate = film.watchDate.format("YYYY-MM-DD");
+    console.log('film.watchDate: ',film.watchDate);
+  }
+  console.log('JSON.stringify(film): ', JSON.stringify(film) );
+    
+  return getJson(
+    fetch(SERVER_URL + "films", {  
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(film) 
+    })
+  )
+}
+
+/**
+ * This function deletes a film from the back-end library.
+ */
+function deleteFilm(filmId) {
+  return getJson(
+    fetch(SERVER_URL + "films/" + filmId, {
+      method: 'DELETE',
+    })
+  )
+}
+
+
+const API = { getFilms, updateFilm, addFilm, deleteFilm };
 export default API;
