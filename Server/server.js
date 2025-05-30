@@ -250,13 +250,13 @@ app.get('/api/films/filter/:paramfilter', (req, res) => {
   console.log('req:  ',req); //sto stampando la richiesta lato client
   if(req.params.paramfilter == 'All'){
     films = library.getAll();
-  }else if(req.params.paramfilter == 'best'){
+  }else if(req.params.paramfilter == 'Best Rated'){//best
     films = library.getAllBest();
   }else if(req.params.paramfilter == 'Favorites'){
     films = library.getAllFavorite();
-  }else if(req.params.paramfilter == 'lastmonth'){
+  }else if(req.params.paramfilter == 'Seen Last Month'){// lastmonth
     films = library.getAllLastMonth();
-  }else if(req.params.paramfilter == 'unseen'){
+  }else if(req.params.paramfilter == 'Unseen'){//  unseen
     films = library.getAllUnseen();
   }
   
